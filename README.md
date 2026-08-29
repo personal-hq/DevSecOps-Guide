@@ -22,6 +22,7 @@
 | ├ [sast-engine-comparison](30-security-scanning/sast-engine-comparison.md) | SAST 引擎选型实测：CodeQL 许可证、Semgrep vs Opengrep |
 | └ [tool-selection](30-security-scanning/tool-selection.md) | 商业/进阶工具选型 |
 | [40-dependency-updates](40-dependency-updates/) | Renovate：权限模型与踩坑 |
+| [templates](templates/) | 仓库模板：service / docs 两种，以及为什么只能复制不能用可复用 workflow |
 
 **规范文档**（不是实施记录，是给别的团队照着做的参考架构）：
 

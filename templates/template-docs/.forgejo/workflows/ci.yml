@@ -1,0 +1,14 @@
+# 文档仓的最小 CI：只做链接检查一类的轻量校验。
+#
+# **不要给这个仓开 status check 保护。** 本实例实测：无 workflow 的仓套
+# status_check_contexts:["*"] 会永久不能合（fail-closed）；而必检 job 一旦
+# 加了 paths-ignore 被跳过，也从不上报 status，同样永久合不了。
+name: docs-ci
+on:
+  pull_request:
+jobs:
+  lint:
+    runs-on: debian-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "文档仓：只做轻量校验，不设必检"

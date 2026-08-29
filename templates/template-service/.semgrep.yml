@@ -1,0 +1,10 @@
+# 仓内规则集。刻意小而准——合入门要少而准，噪音进来第一件事就是被绕过。
+rules:
+  - id: child-process-concat
+    languages: [javascript]
+    severity: ERROR
+    message: 命令拼接用户输入 —— 命令注入
+    patterns:
+      - pattern-either:
+          - pattern: require('child_process').exec($X + $Y)
+          - pattern: exec($X + $Y)

@@ -1,0 +1,11 @@
+# Forgejo 只读**仓库根目录**这一份（`.gitea/` `docs/` `.forgejo/` 也是合法位置，
+# 但那是四个制造冲突的机会，不是四个选项——只放这一份）。
+# 语法是 **Go 正则，不是 glob**：写成 src/** 会静默零匹配、不报错。
+#
+# 这些路径改动需要负责人审查。配合分支保护的
+# block_on_official_review_requests=true 才是硬门禁，只配这个文件只是通知。
+^\.forgejo/workflows/.*   @platform-team
+^\.semgrep\.yml$          @platform-team
+^\.trivyignore$           @platform-team
+^\.gitleaks\.toml$        @platform-team
+^CODEOWNERS$              @platform-team
