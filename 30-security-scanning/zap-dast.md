@@ -187,10 +187,24 @@ FAIL-NEW: 0   FAIL-INPROG: 0   WARN-NEW: 11   WARN-INPROG: 0   INFO: 0   IGNORE:
 `Missing Anti-clickjacking ×3`、`X-Content-Type-Options Missing ×3`、`CSP Not Set ×3`，
 外加 `X-Powered-By` 泄露、`Permissions-Policy`、`COEP`。
 
-**但它们全是 WARN，没有一条 FAIL** ——只看退出码，这一步是"过"的。
-一个连 CSP、X-Frame-Options、HttpOnly 都没有的应用，baseline 默认判定不红。
+**它们全是 WARN，没有一条 FAIL。** 但要说清楚退出码到底怎么算——这一点很容易搞错
+（本文初稿就写错过，实测后更正）：
 
-所以门禁不能只接退出码，要么用 AF plan 的 `exitStatus.warnLevel`，要么在 job 里自己断言：
+| 命令 | 退出码 | 说明 |
+|---|---|---|
+| `zap-baseline.py -t <url>` | **2** | 默认行为：**有 warning 就非零退出**，门禁会红 |
+| `zap-baseline.py -t <url> **-I**` | **0** | `-I` = 不因 warning 返回失败 |
+
+所以危险的不是 ZAP 的默认值，是 **`-I` 这个参数**：它看起来像个无害的降噪开关，
+实际把整道门禁变成空壳——一个连 CSP、X-Frame-Options、HttpOnly 都没有的应用，
+加了 `-I` 就是"过"。
+
+> **凡是在 DAST 命令里看到 `-I`，都要问一句"那这道闸还挡什么"。**
+> 要降噪应该用 `-c <rules.tsv>` 逐条豁免（有记录、可审查），
+> 或者 AF plan 里的 `alertFilter`，**不是把整类结果一刀切成不失败**。
+
+门禁接法三选一：默认退出码（最简单）、AF plan 的 `exitStatus.warnLevel`、
+或者在 job 里自己断言：
 
 ```bash
 for rule in "Content Security Policy" "Anti-clickjacking" "X-Content-Type-Options"; do
@@ -201,3 +215,93 @@ done
 **这个断言是反向的**：应用故意有这些问题，**扫不出来才说明扫描器坏了**。
 这就是 [00-principles](../00-principles.md) 第 1 条在 DAST 上的具体形态——
 canary 不一定是一个仓库，也可以是"预期必须命中的一组规则"。
+
+---
+
+## 三种模式什么时候跑（实测校准）
+
+关键区别**不是**被动/主动，是**怎么发现目标**：
+
+| | 发现方式 | 规则 | 什么时候跑 |
+|---|---|---|---|
+| **baseline** | 爬 HTML 链接 | 只被动 | **每次部署预发**。分钟级，不发攻击载荷 |
+| **api-scan** | **读 OpenAPI/GraphQL/SOAP spec** | 被动为主 | 目标是 API 时**必须**用它 |
+| **full-scan** | 爬虫无上限 | 被动 + **主动** | **只能定时或手动**：大改版、新产品上线前、或夜间/每周 |
+
+**api-scan 那条最容易漏**：REST API 没有 HTML 链接可爬，**爬虫对它几乎什么都发现不了**，
+于是 baseline 报"干净"——干净是因为它没看到接口，不是因为没问题。
+这是[名词详解](../01-glossary.md)里「DAST 报告很干净」陷阱的另一个成因：
+不是没配认证，是**没配发现**。
+
+**full-scan 绝不能进任何自动门禁**：主动扫描会真的提交表单、改数据，
+对目标要有书面授权。要在门禁里做主动扫描，用 AF 的 `activeScan-policy`
+限时限规则挂在预发那一步。
+
+同一个演示应用实测（修完响应头之后）：
+
+| | 规则数 | 结果 |
+|---|---|---|
+| baseline | PASS 64 | WARN 1 |
+| **full-scan** | **PASS 140** | **FAIL 0 / WARN 1** |
+
+主动扫描多跑了一倍多的规则。这个应用只有两个页面，几分钟就完；
+真实应用是小时级，这就是它不能进门禁的直接原因。
+
+## DinD 下给 ZAP 传配置文件：三个坑叠在一起
+
+在 Forgejo Actions（runner + dind 边车）里跑 ZAP 并带 `-c rules.tsv`，
+**连踩三次才通**。三个都不指向真正的原因：
+
+| # | 现象 | 真正的原因 |
+|---|---|---|
+| 1 | `FileNotFoundError: /zap/wrk/.zap/rules.tsv` | `docker run -v <path>` 的 path 由 **dind 守护进程**解析，不是 job 容器里的路径。挂 `$PWD` 没有意义 |
+| 2 | `Error response from daemon: Could not find the file /zap/wrk in container` | 镜像里**没有 `/zap/wrk`**（那是给 `-v` 用的挂载点），往未 `start` 的容器 `docker cp` 到不存在的目录会失败 |
+| 3 | **打印 usage 然后退出**（看起来完全像参数写错） | `zap-baseline.py` 只要给了 `-c`，就把 `base_dir` 钉成 `/zap/wrk` **并要求它存在** |
+
+解法是**命名卷**——卷由 dind 管理，两边都看得到，一次解决三条：
+
+```bash
+docker volume create zapwrk
+docker run --rm -i -v zapwrk:/w alpine sh -c 'cat > /w/rules.tsv' < .zap/rules.tsv
+docker run --rm --network dast-net -v zapwrk:/zap/wrk \
+  ghcr.io/zaproxy/zaproxy:stable \
+  zap-baseline.py -t http://staging:3000 -j -c rules.tsv
+```
+
+### `rules.tsv` 必须至少三列
+
+```
+规则ID <TAB> 动作(IGNORE|INFO|WARN|FAIL) <TAB> 说明 [<TAB> URL正则]
+```
+
+只写两列会报 `Unexpected number of tokens on line - there should be at least 3`，
+ZAP 以**退出码 3** 结束。退出码 3 是"配置错误"不是"扫描失败"，但门禁一样红——
+**红了先看是不是配置问题，别直接去改应用。**
+
+第三列就是理由。写清楚：一个没人看得懂理由的 `IGNORE`，和直接加 `-I` 没有区别，
+只是分散成了很多行。
+
+## 「零告警」的 DAST 门禁达不到，别去追
+
+同一个应用一路收敛：
+
+| 动作 | WARN 数 |
+|---|---|
+| 什么都不做 | 11 |
+| 挂 `helmet()` | 5 |
+| 补 COEP + Permissions-Policy | 3 |
+| CSP 从 helmet 默认收紧到 `'self'` | 1（`10055` 从 ×8 降到 ×2） |
+| 剩下的写进 `rules.tsv` 并说明理由 | **0，门禁绿** |
+
+最后那条是**判断**不是妥协：剩余的 `10055` 是那些不回退 `default-src` 的指令
+（frame / worker / font 之类），这个应用没有这些场景。**继续追零告警，
+下一步就是给自己加 `-I`——那才是真正的失控。**
+
+分层效果实测（同一条 `release` workflow，`promote` 用 `needs: dast`）：
+
+| DAST | `promote` |
+|---|---|
+| failure | **一个 run 都没有** |
+| success | success |
+
+**合入门已经放行了（代码在 main 里），不代表可以上生产。** 这就是分层。
