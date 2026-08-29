@@ -35,3 +35,19 @@ Renovate 把关闭 PR 理解成"用户拒绝了这次更新"，之后不会再�
 ## 判断"修好了"要看文件列表
 
 **不能凭"错误消失"就说修好，要看 PR 的文件列表里有没有锁文件**（见 [00-principles.md](../00-principles.md) 第二条）——Renovate 对已存在的分支不会自动重算 artifact，报错消失可能只是"这次没有新活可干"，不代表锁文件被正确更新了。
+
+## `prHourlyLimit` 默认 2 —— 静默少提 PR
+
+自建实例上跑 Renovate 时，一个仓有 3 个可更新依赖，只开出了 2 个 PR，
+**日志里没有任何错误或警告**，看起来就像"另一个依赖没有新版本"。
+
+根因是 `prHourlyLimit` 默认 **2**。验证方法：
+
+```bash
+-e RENOVATE_PR_HOURLY_LIMIT=0 -e RENOVATE_PR_CONCURRENT_LIMIT=0
+```
+
+解掉限制后缺的那个 PR 立刻出现。
+
+> 首次接入、或迁一批仓库进来时一定会撞上——那时"少了几个 PR"很容易被当成
+> "Renovate 没识别这个依赖"，去改 `renovate.json` 白费半天。

@@ -172,3 +172,32 @@ jobs:
 ## 本环境特有的坑
 
 ZAP 容器要能打到目标 URL。runner 在 compose 网络里，job 容器却在 DinD 的独立网桥上——和 `actions/checkout` 解析不到 forgejo 是同一类问题，修法参见 [20-ci-cd/README.md](../20-ci-cd/README.md)"已知的 CI 网络坑"一节。
+
+---
+
+## 实做记录：baseline 的退出码不能当判据（2026-08-29）
+
+对一个**故意不设任何安全响应头**的 Express 应用跑 `zap-baseline.py`，汇总行是：
+
+```
+FAIL-NEW: 0   FAIL-INPROG: 0   WARN-NEW: 11   WARN-INPROG: 0   INFO: 0   IGNORE: 0   PASS: 56
+```
+
+命中的正是种下的那些：`Cookie No HttpOnly ×2`、`Cookie without SameSite ×2`、
+`Missing Anti-clickjacking ×3`、`X-Content-Type-Options Missing ×3`、`CSP Not Set ×3`，
+外加 `X-Powered-By` 泄露、`Permissions-Policy`、`COEP`。
+
+**但它们全是 WARN，没有一条 FAIL** ——只看退出码，这一步是"过"的。
+一个连 CSP、X-Frame-Options、HttpOnly 都没有的应用，baseline 默认判定不红。
+
+所以门禁不能只接退出码，要么用 AF plan 的 `exitStatus.warnLevel`，要么在 job 里自己断言：
+
+```bash
+for rule in "Content Security Policy" "Anti-clickjacking" "X-Content-Type-Options"; do
+  grep -q "$rule" /tmp/zap.txt || { echo "没命中 $rule —— ZAP 没真打到应用"; exit 1; }
+done
+```
+
+**这个断言是反向的**：应用故意有这些问题，**扫不出来才说明扫描器坏了**。
+这就是 [00-principles](../00-principles.md) 第 1 条在 DAST 上的具体形态——
+canary 不一定是一个仓库，也可以是"预期必须命中的一组规则"。

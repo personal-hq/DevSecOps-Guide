@@ -304,3 +304,71 @@ setting), deny '172.28.0.1(172.28.0.1:9999)'
 
 失败**不会**出现在仪表盘或通知里，只在 hook 的投递历史（`hook_task.response_content`）
 里看得到。配完 webhook 一定要去翻一次投递记录，别看到"hook 创建成功"就以为通了。
+
+## 八、跑通一条完整流水线时踩的坑（2026-08-29 实做）
+
+从零把「合入门 → 出厂 → DAST」串起来时，**六个坑全部来自环境假设，不是逻辑错误**。
+共同点：报错都不指向真正的原因。
+
+### 1. job 容器解析不到 `runner-dind`
+
+和 `forgejo` 那条（§四）同源：job 容器由 dind 创建，落在 dind 自己的网桥上，
+**compose 的服务名一个都解析不到**。想在 job 里用 docker（build / push 镜像）就得再加一条：
+
+```yaml
+options: "--add-host=forgejo:<IP> --add-host=runner-dind:<IP>"
+```
+
+不加时的症状：`runner-dind 解析不到` + `2375 不可达`，而 `DOCKER_HOST` 环境变量看起来是对的。
+
+### 2. runner 镜像里没有 python3，扫描器官方镜像里没有 node
+
+标签映射到 `node:26-trixie` —— **没有 python/pip**，`pip install semgrep` 必然失败。
+反过来，`semgrep/semgrep` 镜像**没有 node**，而 Forgejo 用容器里的 node 执行 JS action，
+所以 `actions/checkout` 在里面也跑不了。
+
+两条规矩：
+
+- **job 里的辅助脚本只用 node 写**（这个镜像唯一保证有的运行时）。我们为此栽了两次。
+- **需要专用镜像的 job 用 `container:`，并放弃 `actions/checkout`**，改手工 fetch 单个 commit：
+
+```yaml
+- run: |
+    git init -q /src && cd /src
+    git remote add origin "http://x-access-token:${TOKEN}@forgejo:3000/${GITHUB_REPOSITORY}.git"
+    git -c protocol.version=2 fetch -q --depth 1 origin "$GITHUB_SHA"
+    git checkout -q FETCH_HEAD
+  env:
+    TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+### 3. `trivy config` 不接受 `--no-progress`
+
+加了会**打印 usage 并以非零退出**——在 CI 里看起来完全像"扫出了问题"，实际是参数错。
+`trivy image` / `trivy fs` 接受这个参数，`config` 不接受，很容易照抄错。
+
+### 4. 换基础镜像比加扫描器有效
+
+同一个应用，只换 `FROM`：
+
+| 基础镜像 | HIGH/CRITICAL |
+|---|---|
+| `node:22-bookworm-slim` | **41** |
+| `node:22-alpine` | 13 |
+| `node:24-alpine` | **6** |
+| `gcr.io/distroless/nodejs22-debian12` | 6 |
+
+再 `RUN apk upgrade --no-cache` 修掉 `libcrypto3`/`libssl3` 那两条有修复版本的。
+镜像顺带从 338MB 降到 256MB。**能真修就不要写例外**——剩下 4 条是基础镜像里
+npm CLI 自身的依赖、应用运行时不加载，才走带到期日的例外。
+
+### 5. `block_on_outdated_branch` 让每个 PR 合并前都要 rebase
+
+合并被拒的原文是 `The head branch is behind the base branch`，**不是** "not all checks passed"。
+串行合几个 PR 时每个都要 rebase 一次。而 squash 合并会让后续 rebase 反复冲突
+（同样内容不同 SHA）——从 main 开新分支重放改动，比硬 rebase 干净。
+
+### 6. 例外治理必须有 CI 校验，否则是纯自觉
+
+`.trivyignore` 里写「原因 / 到期 / 负责人」是规范；**解析并强制**才是门禁。
+校验脚本要带反向测试（去掉一行到期日 → 退出码必须是 1），否则你不知道它有没有真在判。
