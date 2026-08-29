@@ -1,0 +1,965 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   theme-routed —— ACME 内部代码仓库 · 浅色单主题
+   ---------------------------------------------------------------------------
+   令牌来源：owner 规范（只做浅色 / Inter 400·500·600 / ui-monospace 用于
+   路径·日志·hash / 固定 rem 阶 h1 19·h2 15@600·body 14·small 13·micro 11.5 /
+   行高 正文 1.45 日志 1.7 / 圆角 8·12 / 卡片内边距 16–18 / 分区节奏 14–22 /
+   描边 0.5–1px / 密度是特性）。
+   变量名全部取自 Forgejo v16.0.3 源码 web_src/css/{themes/theme-forgejo-light,
+   base}.css，逐个核对过，无杜撰。
+   配色策略：改底层 --zinc-* 冷中性阶（47 个变量从它派生）+ 整条 --color-primary
+   换成低饱和深靛蓝。Forgejo 原品牌色是 --color-primary: #c2410c（橙）。
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/assets/fonts/InterVariable.woff2") format("woff2");
+}
+
+:root {
+  /* ── 底层中性阶：zinc 原本偏暖，换成冷中性（略带蓝底）── */
+  --zinc-50:#fafafb;  --zinc-100:#f5f6f8; --zinc-150:#edeef1; --zinc-200:#e3e5ea;
+  --zinc-250:#dadce3; --zinc-300:#cfd2da; --zinc-350:#b7bbc6; --zinc-400:#9ca1b0;
+  --zinc-450:#868c9c; --zinc-500:#6e7488; --zinc-550:#5f6578; --zinc-600:#515669;
+  --zinc-650:#464b5b; --zinc-700:#3d4150; --zinc-750:#32353f; --zinc-800:#272a32;
+  --zinc-850:#1f212a; --zinc-900:#17191f;
+
+  /* ── 强调色：低饱和深靛蓝。企业内部工具，不要消费级的高饱和 ── */
+  --color-primary:          #454b8c;
+  --color-primary-contrast: #ffffff;
+  --color-primary-hover:    #3b4077;
+  --color-primary-active:   #333765;
+  --color-primary-dark-1:#3e447f; --color-primary-dark-2:#373c71;
+  --color-primary-dark-3:#303564; --color-primary-dark-4:#2a2e56;
+  --color-primary-dark-5:#232749; --color-primary-dark-6:#1d203b;
+  --color-primary-dark-7:#16182e;
+  --color-primary-light-1:#545a9a; --color-primary-light-2:#676ca8;
+  --color-primary-light-3:#7b7fb6; --color-primary-light-4:#9093c4;
+  --color-primary-light-5:#a6a9d2; --color-primary-light-6:#bec0e0;
+  --color-primary-light-7:#d9daee;
+  --color-primary-alpha-10:#454b8c1a; --color-primary-alpha-20:#454b8c33;
+  --color-primary-alpha-30:#454b8c4d; --color-primary-alpha-40:#454b8c66;
+  --color-primary-alpha-50:#454b8c80; --color-primary-alpha-60:#454b8c99;
+  --color-primary-alpha-70:#454b8cb3; --color-primary-alpha-80:#454b8ccc;
+  --color-primary-alpha-90:#454b8ce6;
+  --color-accent: #454b8c;
+  --color-small-accent: #eef0f7;
+
+  /* ── 表面 / 结构 ── */
+  --color-body:#fafafb; --color-box-body:#ffffff; --color-box-body-highlight:#f5f6f8;
+  --color-box-header:#f8f9fb; --color-card:#ffffff; --color-menu:#ffffff;
+  --color-nav-bg:#ffffff; --color-nav-hover-bg:#f0f1f4; --color-secondary-nav-bg:#ffffff;
+  --color-header-wrapper:#ffffff; --color-header-wrapper-transparent:#ffffff00;
+  --color-footer:#fafafb; --color-secondary-bg:#f5f6f8;
+  --color-hover:#f0f1f4; --color-active:#eaebef;
+  --color-light-border:#edeef1; --color-input-border:#e3e5ea;
+  --color-input-border-hover:#c4c8d2; --color-input-background:#ffffff;
+  --color-shadow:#17191f14; --color-overlay-backdrop:#17191f5c;
+  --fancy-card-bg:#ffffff; --fancy-card-border:#e3e5ea;
+
+  /* ── 文字 ── */
+  --color-text:#17191f; --color-text-dark:#0b0c10; --color-text-light:#4a5060;
+  --color-text-light-1:#5a6070; --color-text-light-2:#7c8292; --color-text-light-3:#949aa8;
+  --color-text-focus:#0b0c10; --color-input-text:#17191f; --color-placeholder-text:#a8adb9;
+  --color-selection-bg:#d9daee; --color-selection-fg:#17191f;
+
+  /* ── 语义色：只在 CI 状态 / 告警 / diff 出现 ── */
+  --color-green:#0f7b4f;  --color-green-light:#17925f;  --color-green-dark-1:#0c6641; --color-green-dark-2:#0a5335;
+  --color-red:#b42318;    --color-red-light:#cc2b1e;    --color-red-dark-1:#9a1e14;   --color-red-dark-2:#801910;
+  --color-orange:#b45309; --color-orange-light:#cc5f0b; --color-orange-dark-1:#9a4708;--color-orange-dark-2:#803b06;
+  --color-yellow:#a16207; --color-yellow-light:#b87008;
+  --color-blue:#1d4ed8;   --color-blue-light:#2563eb;   --color-blue-dark-1:#1a45bd;  --color-blue-dark-2:#163ba3;
+  --color-teal:#0f766e;   --color-teal-light:#118a80;
+
+  --color-success-bg:#eef8f2; --color-success-border:#c2e4d2; --color-success-text:#0c6641;
+  --color-error-bg:#fdeeec;   --color-error-border:#f3cac5;   --color-error-text:#9a1e14;
+  --color-error-bg-hover:#fbe3e0; --color-error-bg-active:#f8d6d2;
+  --color-warning-bg:#fdf5e8; --color-warning-border:#f0d9ac; --color-warning-text:#8a4a06;
+  --color-info-bg:#eff1f9;    --color-info-border:#ccd0e8;    --color-info-text:#373c71;
+
+  --color-green-badge:#0f7b4f;  --color-green-badge-bg:#eef8f2;  --color-green-badge-hover-bg:#dff1e7;
+  --color-red-badge:#b42318;    --color-red-badge-bg:#fdeeec;    --color-red-badge-hover-bg:#fbe3e0;
+  --color-orange-badge:#b45309; --color-orange-badge-bg:#fdf5e8; --color-orange-badge-hover-bg:#fbecd4;
+  --color-yellow-badge:#a16207; --color-yellow-badge-bg:#fdf8e8; --color-yellow-badge-hover-bg:#fbf2d1;
+  --color-indicator-active:#0f7b4f; --color-indicator-idle:#b45309; --color-indicator-offline:#949aa8;
+
+  /* ── 标签 / 反应 / 提示 ── */
+  --color-label-bg:#eff0f3; --color-label-bg-alt:#e7e9ee; --color-label-hover-bg:#e3e5ea;
+  --color-label-active-bg:#dadce3; --color-label-text:#3d4150;
+  --color-reaction-bg:#eff0f3; --color-reaction-hover-bg:#eef0f7; --color-reaction-active-bg:#d9daee;
+  --color-tooltip-bg:#272a32; --color-tooltip-text:#fafafb;
+  --color-timeline:#e3e5ea; --color-expand-button:#eff0f3; --color-project-board-bg:#f5f6f8;
+
+  /* ── 代码 / diff / 控制台 ── */
+  --color-code-bg:#fbfbfc; --color-markup-code-block:#f5f6f8; --color-markup-code-inline:#eff0f3;
+  --color-markup-table-row:#fafafb; --color-editor-line-highlight:#fdf8e8;
+  --color-highlight-bg:#fdf5e8; --color-highlight-fg:#8a4a06;
+  --color-diff-added-row-bg:#eef8f2;  --color-diff-added-word-bg:#c8ecd8;  --color-diff-added-row-border:#d8eee2;
+  --color-diff-removed-row-bg:#fdeeec; --color-diff-removed-word-bg:#fad7d2; --color-diff-removed-row-border:#f6dcd8;
+  --color-diff-moved-row-bg:#fdf8e8;  --color-diff-moved-row-border:#f0e4bc; --color-diff-inactive:#f5f6f8;
+  --color-console-bg:#17191f; --color-console-fg:#e3e5ea; --color-console-fg-subtle:#9ca1b0;
+  --color-console-border:#272a32; --color-console-hover-bg:#272a32; --color-console-active-bg:#32353f;
+  --color-console-menu-bg:#1f212a; --color-console-menu-border:#32353f;
+
+  /* ── 排版：Inter 覆盖拉丁，CJK 走系统字体（Inter 不含汉字）── */
+  --fonts-override: Inter, -apple-system, "Segoe UI", system-ui, "PingFang SC",
+                    "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Noto Sans", Roboto;
+
+  /* ── 圆角 ── */
+  --border-radius: 8px;
+  --border-radius-medium: 12px;
+}
+
+/* 原生控件（复选框 / 单选 / 进度条）跟随强调色，省掉一堆 Fomantic 伪元素覆盖 */
+:root { accent-color: var(--color-primary); }
+
+/* ═══ 字号阶：固定 rem，锚在 base.css 的 14px 上 ═══ */
+body { line-height: 1.45; }
+h1 { font-size:1.35714286rem; font-weight:600; line-height:1.3;  letter-spacing:-.01em; }
+h2 { font-size:1.07142857rem; font-weight:600; line-height:1.35; }
+h3 { font-size:1rem;          font-weight:600; }
+h4 { font-size:.92857143rem;  font-weight:600; }
+h5, h6 { font-size:.82142857rem; font-weight:600; letter-spacing:.01em; }
+.ui.header { font-weight:600; letter-spacing:-.005em; }
+.time, .meta, .ui.sub.header { font-size:.92857143rem; color:var(--color-text-light-2); }
+.commit-summary .sha, .ui.mini.label { font-size:.82142857rem; }
+
+/* mono 归位：路径 / hash / 日志 */
+.sha, .commit-id, .file-info, .repo-path, code, kbd, samp { font-family:var(--fonts-monospace); }
+
+/* ═══ 密度 ═══ */
+.ui.segment, .ui.card, .ui.attached.segment { padding:17px; }
+.ui.divider { border-top-width:.5px; }
+.flex-list .flex-item { padding:14px 17px; }
+.flex-list .flex-item + .flex-item { border-top:.5px solid var(--color-light-border); }
+.page-content { padding-top:14px; }
+
+/* ═══ 按钮 ═══ */
+.ui.button {
+  font-weight:500; font-size:.92857143rem; padding:8px 13px;
+  border-radius:var(--border-radius);
+  transition:background-color .14s ease, border-color .14s ease, color .14s ease;
+}
+.ui.primary.button { background:var(--color-primary); border-color:var(--color-primary); }
+.ui.primary.button:hover, .ui.primary.button:focus { background:var(--color-primary-hover); border-color:var(--color-primary-hover); }
+.ui.primary.button:active { background:var(--color-primary-active); }
+.ui.basic.button, .ui.button:not(.primary):not(.red):not(.green) {
+  background:#fff; border:1px solid var(--color-input-border); color:var(--color-text);
+}
+.ui.basic.button:hover, .ui.button:not(.primary):not(.red):not(.green):hover {
+  background:var(--color-hover); border-color:var(--color-input-border-hover);
+}
+
+/* ═══ 表单 ═══ */
+.ui.input > input, .ui.form input:not([type=checkbox]):not([type=radio]):not([type=hidden]),
+.ui.form textarea, .ui.selection.dropdown, select {
+  border-radius:var(--border-radius); border:1px solid var(--color-input-border);
+  font-size:.92857143rem; padding:8px 11px;
+  transition:border-color .14s ease, box-shadow .14s ease;
+}
+.ui.input > input:focus, .ui.form input:focus, .ui.form textarea:focus,
+.ui.selection.dropdown:focus, select:focus {
+  border-color:var(--color-primary-light-4);
+  box-shadow:0 0 0 3px var(--color-primary-alpha-10);
+  outline:none;
+}
+.ui.form label { font-size:.92857143rem; font-weight:500; color:var(--color-text-light); }
+.ui.form .field > .help, .ui.form .help { font-size:.82142857rem; color:var(--color-text-light-2); }
+/* 原生 checkbox 复用同一个 --border-radius 变量：index.css 里
+   :is(form,.markup) input[type=checkbox]{...border-radius:var(--border-radius);
+   height/width:var(--checkbox-size)…} —— --checkbox-size 是 15px。上游默认
+   --border-radius:4px，配 15px 方框是正常的圆角方形；我们把这个变量整体调到 8px
+   是给卡片/按钮用的，同一个变量套到 15px 的复选框上就超过半宽（>7.5px），直接
+   变成一个实心圆点，看不出是复选框（在 /user/settings/applications 的
+   "Confidential client" 上实测复现）。这里用上游同款选择器加一条更小的固定值
+   覆盖，不影响卡片/按钮仍用 --border-radius；同选择器同特异度，theme-routed.css
+   后加载即赢，不需要 !important。radio 不受影响——原生 radio 没有这条
+   border-radius 规则，本来就是圆的。 */
+:is(form, .markup) input[type=checkbox] { border-radius: 4px; }
+
+/* ═══ 顶栏 ═══ */
+#navbar {
+  background:var(--color-nav-bg); border-bottom:1px solid var(--color-light-border);
+  padding:4px 14px; min-height:52px;
+}
+#navbar .ui.secondary.menu .item {
+  font-size:.92857143rem; font-weight:500; color:var(--color-text-light-1);
+  border-radius:var(--border-radius); padding:6px 10px;
+  transition:background-color .14s ease, color .14s ease;
+}
+#navbar .ui.secondary.menu .item:hover { background:var(--color-nav-hover-bg); color:var(--color-text); }
+#navbar .ui.secondary.menu .active.item { color:var(--color-primary); background:var(--color-primary-alpha-10); }
+
+/* ═══ 仓库头 + tab ═══ */
+.repo-header { padding:14px 0 10px; border-bottom:1px solid var(--color-light-border); }
+.repo-header .repo-title { font-size:1.35714286rem; font-weight:600; line-height:1.3; }
+.repo-buttons.button-row .ui.button { font-size:.92857143rem; padding:6px 11px; }
+
+.ui.tabular.menu { border-bottom:1px solid var(--color-light-border); }
+.ui.tabular.menu .item {
+  font-size:.92857143rem; font-weight:500; color:var(--color-text-light-1);
+  padding:9px 12px; border:0; border-bottom:2px solid transparent; border-radius:0;
+  transition:color .14s ease, border-color .14s ease;
+}
+.ui.tabular.menu .item:hover { color:var(--color-text); background:transparent; }
+.ui.tabular.menu .active.item {
+  color:var(--color-primary); border-bottom-color:var(--color-primary);
+  background:transparent; font-weight:600;
+}
+
+/* ═══ 表格 / 列表 ═══ */
+.ui.table { border-radius:var(--border-radius-medium); font-size:.92857143rem; }
+.ui.table thead th {
+  background:var(--color-box-header); font-size:.82142857rem; font-weight:600;
+  letter-spacing:.02em; color:var(--color-text-light-1); padding:8px 11px;
+}
+.ui.table td { padding:7px 11px; border-top:.5px solid var(--color-light-border); }
+.ui.table tbody tr:hover td { background:var(--color-hover); }
+#repo-files-table .name, #repo-files-table .name a { font-family:var(--fonts-monospace); }
+#repo-files-table .message, #repo-files-table .age { color:var(--color-text-light-2); font-size:.82142857rem; }
+
+/* ═══ 代码视图 ═══ */
+.file-header.ui.top.attached.header {
+  background:var(--color-box-header); border:1px solid var(--color-input-border);
+  border-radius:var(--border-radius-medium) var(--border-radius-medium) 0 0;
+  padding:9px 12px; font-size:.92857143rem; font-weight:500;
+}
+.file-info, .file-info-entry { font-size:.82142857rem; color:var(--color-text-light-2); }
+.file-view {
+  border:1px solid var(--color-input-border); border-top:0;
+  border-radius:0 0 var(--border-radius-medium) var(--border-radius-medium);
+}
+.file-view.markup { padding:18px; line-height:1.6; }
+.file-view.code-view .lines-num { color:var(--color-text-light-3); font-size:.82142857rem; }
+.file-view.code-view .lines-code { font-size:.92857143rem; line-height:1.7; }
+.job-step-logs, .log-line, .console, pre.raw { line-height:1.7; }
+
+/* ═══ 登录 / 注册页 ═══
+   注意作用域：必须逐个列出认证页（signin/signup/activate/forgot.password/
+   reset.password/link-account），**不能只写 .page-content.user** ——
+   个人主页是 .page-content.user.profile、用户设置是 .page-content.user.settings，
+   都会被一并命中。踩过：`.page-content.user .ui.form .ui.button{width:100%}`
+   本意是让登录按钮撑满卡片，结果把个人主页仓库搜索框旁边的按钮也撑成整行，
+   输入框被挤成 24px 宽的空盒子。 */
+/* Forgejo 的 Tailwind 工具类带 !important（.tw-max-w-2xl{max-width:42rem!important}），
+   只能同样用 !important 反压 —— 这是这里唯一可行的做法，不是偷懒。 */
+.page-content.user.signin .ui.page.grid > .column.tw-max-w-2xl,
+.page-content.user.signup .ui.page.grid > .column.tw-max-w-2xl,
+.page-content.user.activate .ui.page.grid > .column.tw-max-w-2xl,
+.page-content.user.forgot.password .ui.page.grid > .column.tw-max-w-2xl,
+.page-content.user.reset.password .ui.page.grid > .column.tw-max-w-2xl,
+.page-content.user.link-account .ui.page.grid > .column.tw-max-w-2xl,
+.page-content.user.signin .ui.attached.segment.tw-max-w-2xl,
+.page-content.user.signup .ui.attached.segment.tw-max-w-2xl,
+.page-content.user.activate .ui.attached.segment.tw-max-w-2xl,
+.page-content.user.forgot.password .ui.attached.segment.tw-max-w-2xl,
+.page-content.user.reset.password .ui.attached.segment.tw-max-w-2xl,
+.page-content.user.link-account .ui.attached.segment.tw-max-w-2xl { max-width: 380px !important; }
+.page-content.user.signin .ui.page.grid,
+.page-content.user.signup .ui.page.grid,
+.page-content.user.activate .ui.page.grid,
+.page-content.user.forgot.password .ui.page.grid,
+.page-content.user.reset.password .ui.page.grid,
+.page-content.user.link-account .ui.page.grid { padding-top: 46px; }
+
+/* 标题从"贴在卡片上的灰条"降级成卡片上方的一行普通标题 */
+.page-content.user.signin .ui.top.attached.header,
+.page-content.user.signup .ui.top.attached.header,
+.page-content.user.activate .ui.top.attached.header,
+.page-content.user.forgot.password .ui.top.attached.header,
+.page-content.user.reset.password .ui.top.attached.header,
+.page-content.user.link-account .ui.top.attached.header {
+  background: transparent; border: 0; padding: 0 2px 10px; margin: 0;
+  font-size: 1.35714286rem; font-weight: 600; line-height: 1.3;
+  letter-spacing: -.01em; text-align: left; color: var(--color-text-dark);
+}
+
+.page-content.user.signin .ui.attached.segment,
+.page-content.user.signup .ui.attached.segment,
+.page-content.user.activate .ui.attached.segment,
+.page-content.user.forgot.password .ui.attached.segment,
+.page-content.user.reset.password .ui.attached.segment,
+.page-content.user.link-account .ui.attached.segment {
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--border-radius-medium);
+  padding: 18px; margin: 0;
+}
+/* "忘记密码"原本是第二张独立卡片 —— 拆掉边框，变回一行文字链接 */
+.page-content.user.signin .ui.attached.segment.header.top,
+.page-content.user.signup .ui.attached.segment.header.top,
+.page-content.user.activate .ui.attached.segment.header.top,
+.page-content.user.forgot.password .ui.attached.segment.header.top,
+.page-content.user.reset.password .ui.attached.segment.header.top,
+.page-content.user.link-account .ui.attached.segment.header.top {
+  background: transparent; border: 0; padding: 14px 0 0; margin: 0;
+  font-size: .92857143rem; font-weight: 400;
+}
+.page-content.user.signin .ui.form,
+.page-content.user.signup .ui.form,
+.page-content.user.activate .ui.form,
+.page-content.user.forgot.password .ui.form,
+.page-content.user.reset.password .ui.form,
+.page-content.user.link-account .ui.form { margin-bottom: 0; }
+.page-content.user.signin .ui.form .field,
+.page-content.user.signup .ui.form .field,
+.page-content.user.activate .ui.form .field,
+.page-content.user.forgot.password .ui.form .field,
+.page-content.user.reset.password .ui.form .field,
+.page-content.user.link-account .ui.form .field { margin-bottom: 14px; }
+.page-content.user.signin .ui.form .inline.field,
+.page-content.user.signup .ui.form .inline.field,
+.page-content.user.activate .ui.form .inline.field,
+.page-content.user.forgot.password .ui.form .inline.field,
+.page-content.user.reset.password .ui.form .inline.field,
+.page-content.user.link-account .ui.form .inline.field { margin-bottom: 16px; }
+.page-content.user.signin .ui.form .ui.button,
+.page-content.user.signup .ui.form .ui.button,
+.page-content.user.activate .ui.form .ui.button,
+.page-content.user.forgot.password .ui.form .ui.button,
+.page-content.user.reset.password .ui.form .ui.button,
+.page-content.user.link-account .ui.form .ui.button { width: 100%; padding: 9px 13px; }
+
+/* ═══ 页脚：去掉视觉重量（版本/耗时/powered-by 已在 app.ini 关闭）═══ */
+.page-footer, footer {
+  border-top:.5px solid var(--color-light-border);
+  font-size:.82142857rem; color:var(--color-text-light-3); padding:14px 0;
+}
+.page-footer a, footer a { color:var(--color-text-light-2); }
+
+/* ═══ 内部服务器：去掉所有跳转到上游官方站（forgejo.org / codeberg.org）的产品链接 ═══
+   内部用户点进去只会看到上游产品文档，帮不上忙，反而暴露底座是什么。
+   范围从"只管顶栏 Help"扩到全站——逐页 curl 核对过（不只是最初点的几个页面），
+   命中点比预想的多：/admin、/admin/hooks、/admin/actions/*、/admin/monitor/*、
+   /user/settings 全系列（含 keys/security/packages 等）、仓库 settings 全系列、
+   顶栏 Help 本身。用子串匹配 [href*=] 而不是前缀匹配 [href^=]：
+   /user/settings/keys 页面有两条 https://docs.codeberg.org/... 的链接，域名是
+   docs.codeberg.org 子域，前缀匹配 "https://codeberg.org" 逮不到，子串匹配才行。
+   同一批页面里还夹着几条第三方链接——/user/settings/keys 的
+   docs.github.com（SSH 故障排查）、/user/settings/security 的
+   w3c.github.io（WebAuthn 规范）——这些不是"上游官方站"，不暴露底座用的是
+   Forgejo，特意不在这条规则的范围内。
+   :not(.markup a) 必要：.markup 是渲染后的用户内容（README/issue/评论），链接是
+   用户自己写的产品之外的内容，不能一起隐藏。 */
+/* !important 是必需的，不是偷懒：顶栏 Help 的父链是 nav#navbar，上游用 ID 选择器
+   （特异度 1,0,0）给 .item 设了 display:flex，压过本规则的 (0,2,2)。
+   已实测确认选择器本身匹配得到元素（querySelectorAll 返回 1），是特异度输了。 */
+a[href*="forgejo.org"]:not(.markup a),
+a[href*="codeberg.org"]:not(.markup a) { display: none !important; }
+
+/* 上面那条只隐藏 <a> 本身；这两处容器隐藏后会露出破绽，逐个 curl 过 DOM 确认：
+   - /admin/actions/runners（以及仓库级 .../actions/runners）"Show registration
+     token"下拉里，"How to start a runner"这一项的全部内容就是这一个链接，隐藏
+     <a> 后是一整行空的可点击菜单条；连它后面紧挨着的分隔线一起摘掉，不然会剩一条
+     悬空的横线立在菜单最上头。
+   - /user/settings/appearance 的翻译召集文案（"Help us translate Forgejo into
+     your language! Learn more."）整段唯一目的就是导流去这个链接，且文案本身直接
+     点名"Forgejo"——链接藏不藏都已经暴露了底座，干脆整段收掉，顺带也把这句和
+     "内部工具不该提上游品牌名"这条对齐了。用 :has(>a…) 限定链接是直接子元素，
+     不会误伤别处结构更复杂、不只是链接容器的区块。 */
+.ui.dropdown .menu .item:has(> a[href*="forgejo.org"]),
+.ui.dropdown .menu .item:has(> a[href*="codeberg.org"]) { display: none; }
+.ui.dropdown .menu .item:has(> a[href*="forgejo.org"]) + .divider,
+.ui.dropdown .menu .item:has(> a[href*="codeberg.org"]) + .divider { display: none; }
+.page-content.user.settings div:has(> a[href*="forgejo.org"]) { display: none; }
+
+/* 未能彻底解决、如实记录：/user/settings/keys 的 SSH/GPG 帮助段、
+   /user/settings 的"Learn more"、/user/settings/packages 的 cargo/chef 帮助、
+   /forgejo-admin/ci-smoke/settings 的镜像说明和分支过滤帮助、/admin/hooks 与
+   仓库 settings/hooks 的 webhooks 说明、settings/tags 的 protected-tags 说明——
+   这些地方链接前后都夹着有独立价值的说明文字（不是纯链接容器，跟上面两处不同），
+   整段摘掉损失更大；但只隐藏 <a> 会在句尾留下"Read more in the ." /
+   "please consult: " 这类悬空的连接词/标点残留。CSS 选不到裸文本节点，没法只削
+   掉链接前后那几个字，两难之下选了保信息、留残留这一边。这是 CSS-only 主题的硬
+   限制，需要动模板才能彻底修，已经如实写进报告，没有假装解决。 */
+
+/* 页脚同理：内部用户不需要上游许可证清单和 Swagger 入口。
+   （API 本身没关，只是不在页脚挂链接；要用的人知道 /api/swagger。） */
+.page-footer a[href="/assets/licenses.txt"],
+.page-footer a[href="/api/swagger"],
+footer a[href="/assets/licenses.txt"],
+footer a[href="/api/swagger"] { display: none; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   表单页统一处理
+   Forgejo 大量表单页（新建组织 / 新建仓库 / 各类设置）都用同一套
+   Fomantic 组合：一条灰色"贴附标题条" + 一张方角全宽卡片 + 右对齐的
+   窄标签列。DOM 已 curl 确认：
+     .ui.middle.very.relaxed.page.grid > .column > form.ui.form
+       > h4.ui.top.attached.header + .ui.attached.segment
+   统一改成：标题在卡片上方、卡片独立圆角、标签置于输入框上方。
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* 居中表单页收窄，避免一行 1400px 的输入框 */
+.ui.middle.very.relaxed.page.grid > .column { max-width: 680px; margin-inline: auto; }
+
+/* 灰色贴附标题条 → 卡片上方的普通标题 */
+.ui.top.attached.header {
+  background: transparent; border: 0; margin: 0 0 10px; padding: 0 2px;
+  font-size: 1.07142857rem; font-weight: 600; line-height: 1.35;
+  text-align: left; color: var(--color-text-dark);
+}
+/* 方角贴附卡片 → 独立圆角卡 */
+.ui.attached.segment {
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--border-radius-medium);
+  margin: 0;
+}
+
+/* 右对齐窄标签列 → 标签置于输入框上方（更密、更好扫）。
+   Forgejo 对这个选择器有一整族"页面级作用域 + !important"的覆盖。关键是
+   .organization.new.org 这类是三个类挂在同一个元素上 —— 特异度 (0,5,2)，
+   通用选择器压不住。所以这里逐条对齐他们的作用域（选择器列表中每条各自
+   计算特异度，同分靠后者胜），width 再加 !important 反压他们的 !important。
+   下面这份清单是 grep index.css 得到的完整集合，不是猜的。 */
+.ui.form .inline.field > label,
+.page-content.install form.ui.form .inline.field > label,
+.user.activate form .inline.field > label,
+.user.signin form .inline.field > label,
+.user.signup form .inline.field > label,
+.user.forgot.password form .inline.field > label,
+.user.reset.password form .inline.field > label,
+.user.link-account form .inline.field > label,
+.repository.new.migrate form .inline.field > label,
+.repository.new.fork form .inline.field > label,
+.organization.new.org form .inline.field > label {
+  display: block;
+  width: auto !important;
+  text-align: start !important;
+  margin: 0 0 6px; padding: 0;
+  font-size: .92857143rem; font-weight: 500; color: var(--color-text-light);
+  word-wrap: normal;
+}
+.ui.form .inline.field { display: block; margin-bottom: 16px; }
+.ui.form .inline.field > .inline-grouped-list { margin-left: 0; display: block; }
+/* 文本类输入撑满卡片；复选/单选行保持内联 */
+.ui.form .inline.field > input:not([type=checkbox]):not([type=radio]):not([type=hidden]),
+.ui.form .inline.field > .ui.input { width: 100%; }
+.ui.form .inline.field > .ui.checkbox,
+.ui.form .inline.field > .ui.radio.checkbox { display: inline-flex; align-items: center; }
+.ui.form .field > .help, .ui.form .help { margin-top: 5px; }
+
+/* ═══ 表单页的两处遗留对齐 ═══
+   Forgejo 给下面这 11 个表单页作用域加了同一族规则：
+     <scope> form .help   { margin-inline-start: 265px !important }
+     <scope> form .header { text-align: center; padding-inline-start: 0 !important }
+   265px 是为了对齐原来那条 250px 的右对齐标签列 —— 标签已改到输入框上方，
+   这个缩进就成了孤儿。作用域清单由脚本从 index.css 提取，非手写，避免漏项。 */
+.moderation.new-report form .help,
+.organization.new.org form .help,
+.repository.new.fork form .help,
+.repository.new.migrate form .help,
+.repository.new.repo form .help,
+.user.activate form .help,
+.user.forgot.password form .help,
+.user.link-account form .help,
+.user.reset.password form .help,
+.user.signin form .help,
+.user.signup form .help {
+  margin-inline-start: 0 !important;
+  display: block;
+  font-size: .82142857rem;
+  color: var(--color-text-light-2);
+  padding-bottom: 0;
+}
+.ui.top.attached.header,
+.moderation.new-report form .header,
+.organization.new.org form .header,
+.repository.new.fork form .header,
+.repository.new.migrate form .header,
+.repository.new.repo form .header,
+.user.activate form .header,
+.user.forgot.password form .header,
+.user.link-account form .header,
+.user.reset.password form .header,
+.user.signin form .header,
+.user.signup form .header {
+  text-align: start;
+}
+
+/* ═══ 表单页残留：为旧标签列留的 265px 缩进 ═══
+   新建仓库页的"初始化仓库"复选框有一条媒体查询里的
+   .repository.new.repo .ui.form #auto-init{margin-inline-start:265px!important}
+   标签已改到输入框上方，这个缩进会把控件推出卡片对齐线。 */
+.repository.new.repo .ui.form #auto-init { margin-inline-start: 0 !important; }
+
+/* 表单页顶部说明段落跟着卡片左对齐（原为居中） */
+/* 实际元素是 <p class="ui center">，靠 .center 类居中 —— 按类名精确覆盖 */
+.repository.new.repo form p.ui.center,
+.repository.new.migrate form p.ui.center,
+.repository.new.fork form p.ui.center { text-align: start; }
+
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   管理后台 / 设置页
+   DOM 已 curl 确认：
+     .page-content.admin > .ui.container.flex-container
+       > .flex-container-nav > .ui.fluid.vertical.menu  （侧栏）
+       > 内容区（.admin-setting-content / .admin-dl-horizontal）
+   注意维护操作的按钮是 class="primary button"，**没有 .ui 类** ——
+   写成 .ui.primary.button 不会命中（踩过一次）。
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── 侧栏：去掉厚重方框，改成轻描边圆角卡 ── */
+.flex-container-nav .ui.fluid.vertical.menu {
+  border: 1px solid var(--color-light-border);
+  border-radius: var(--border-radius-medium);
+  background: var(--color-box-body);
+  box-shadow: none;
+  padding: 6px;
+  overflow: hidden;
+}
+/* 分组标题（"管理设置"）降级成小字标签，不再是一条灰色横幅 */
+.flex-container-nav .ui.vertical.menu .header.item {
+  background: transparent;
+  font-size: .82142857rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--color-text-light-3);
+  padding: 8px 10px 6px;
+  border: 0;
+}
+.flex-container-nav .ui.vertical.menu .item {
+  font-size: .92857143rem;
+  font-weight: 500;
+  color: var(--color-text-light-1);
+  padding: 7px 10px;
+  margin: 1px 0;
+  border-radius: var(--border-radius);
+  border: 0;
+  transition: background-color .14s ease, color .14s ease;
+}
+/* 限定 a.item：侧栏可折叠分组是 <details class="item toggleable-item">，它自己也带
+   .item 类。裸 .item:hover 会连带命中它，导致悬停组内任意子项时，整个分组（含其
+   余未悬停的子项）背景一起被刷灰——子项自己的 hover 高亮之外多出一层大灰块。
+   上游 index.css 只给 a.item 和 details summary 各自的 :hover 上色，没有给
+   details 本身上色，这里对齐上游范围。 */
+.flex-container-nav .ui.vertical.menu a.item:hover { background: var(--color-hover); color: var(--color-text); }
+/* 当前项用靛蓝，不用灰色块 */
+.flex-container-nav .ui.vertical.menu .item.active,
+.flex-container-nav .ui.vertical.menu .active.item {
+  background: var(--color-primary-alpha-10);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+/* Fomantic 会在 vertical menu 的项之间画横线，这里不需要 */
+.flex-container-nav .ui.vertical.menu .item::before { display: none; }
+/* 子菜单缩进，视觉上从属于上一级 */
+.flex-container-nav .ui.vertical.menu .menu .item { padding-left: 20px; font-weight: 400; }
+
+/* ── 维护操作按钮：一屏十几个主色按钮太重，降级为次要按钮 ──
+   （它们是维护动作，不是页面主行动点；真正危险的操作靠确认弹窗兜底） */
+.page-content.admin .primary.button {
+  background: var(--color-box-body);
+  border: 1px solid var(--color-input-border);
+  color: var(--color-text);
+  font-weight: 500;
+  border-radius: var(--border-radius);
+  padding: 6px 12px;
+  box-shadow: none;
+  transition: background-color .14s ease, border-color .14s ease;
+}
+.page-content.admin .primary.button:hover {
+  background: var(--color-hover);
+  border-color: var(--color-input-border-hover);
+  color: var(--color-text);
+}
+
+/* ── 内容区密度：默认每行留白过大，收紧 ── */
+.page-content.admin .admin-setting-content .item,
+.page-content.admin .flex-list .flex-item { padding: 10px 16px; }
+.page-content.admin .ui.attached.segment { padding: 4px 0; }
+.page-content.admin .ui.attached.segment > .item {
+  border-top: .5px solid var(--color-light-border);
+}
+.page-content.admin .ui.attached.segment > .item:first-child { border-top: 0; }
+
+/* 系统状态那种"名 / 值"定义列表 */
+.admin-dl-horizontal dt { font-size: .92857143rem; color: var(--color-text-light-1); font-weight: 500; }
+.admin-dl-horizontal dd { font-size: .92857143rem; font-family: var(--fonts-monospace); }
+
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   设置侧栏图标 —— Octicons（Forgejo 自带，MIT），内联为 data URI
+   Forgejo 本身就用 GitHub 的 Octicons，所以直接复用它的图形，不自绘：
+   跟产品其余部分天然一致，也跟用户参照的 GitHub 界面同一套语言。
+   为什么内联而不是引 /assets/img/svg/octicon-*.svg：
+     mask-image 受跨源限制（实测 file:// 页面引 http 的 svg 遮罩为空），
+     内联同时省掉每个图标一轮请求，也不怕上游改资源路径。
+   用 mask 而非 background-image：图标继承 currentColor，当前项变靛蓝时
+   图标自动跟着变，不用维护两套配色。
+   按 href 挂载；可折叠分组没有 href，用 :has() 按组内链接识别 ——
+   都不依赖 :nth-child，上游增删菜单项不会错位。
+   ═══════════════════════════════════════════════════════════════════════ */
+/* 限定 a.item（不能用裸 .item）：可折叠分组的 <details class="item toggleable-item">
+   自己也带 .item 类。上游给 .item 的默认 display 是 block，details/summary/子菜单
+   靠这个 block 纵向堆叠；裸 .item 选择器会把 display 反而改成 flex，把 details 的
+   直接子元素（<summary> 和 <div class="menu">）拉成横排——展开态下 summary 文字
+   和子项列表挤在一行、互相压字，在 /admin/users、/admin/config、
+   /admin/actions/runners 这类"当前页所在分组默认展开"的页面上直接可见（截图验证过）。
+   收窄成 a.item 后 details 保持 block，展开态恢复纵向堆叠；summary 那行的图标+文字
+   对齐仍由下面这条规则的第二个选择器单独给。 */
+.flex-container-nav .ui.vertical.menu a.item,
+.flex-container-nav .ui.vertical.menu details.toggleable-item > summary {
+  display: flex; align-items: center; gap: 9px;
+}
+/* 上游给 summary 的是 justify-content:space-between，图上量过——放大截图看才
+   发现：summary 里有三个 flex 子项（::before 图标、文字、::after chevron），
+   space-between 会把三者"两端对齐、间距均分"，中间的文字被推到整行正中央，跟
+   图标之间空出一大截，跟其余 a.item 行（图标紧贴文字）不一致。改成 flex-start
+   让图标+文字紧靠左边，chevron 单独用 margin-inline-start:auto 顶到最右
+   （下面那条规则），效果不靠 space-between 的副作用。 */
+.flex-container-nav .ui.vertical.menu details.toggleable-item > summary {
+  justify-content: flex-start;
+}
+.flex-container-nav .ui.vertical.menu details.toggleable-item > summary::after {
+  margin-inline-start: auto;
+}
+/* Fomantic 用 ::before 画分隔线；这里改作图标位，必须把绝对定位一并重置 */
+.flex-container-nav .ui.vertical.menu a.item::before,
+.flex-container-nav .ui.vertical.menu details.toggleable-item > summary::before {
+  content: ""; display: block; position: static; inset: auto;
+  width: 16px; height: 16px; flex: none;
+  background: currentColor; opacity: .7;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center;  mask-position: center;
+  -webkit-mask-size: 16px 16px;   mask-size: 16px 16px;
+}
+.flex-container-nav .ui.vertical.menu a.item.active::before,
+.flex-container-nav .ui.vertical.menu a.active.item::before { opacity: 1; }
+
+.flex-container-nav .ui.vertical.menu a.item[href="/admin"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M8%201.5a6.5%206.5%200%201%200%206.016%204.035.75.75%200%200%201%201.388-.57%208%208%200%201%201-4.37-4.37.75.75%200%201%201-.569%201.389A6.5%206.5%200%200%200%208%201.5m6.28.22a.75.75%200%200%201%200%201.06l-4.063%204.064a2.5%202.5%200%201%201-1.06-1.06L13.22%201.72a.75.75%200%200%201%201.06%200M7%208a1%201%200%201%200%202%200%201%201%200%200%200-2%200%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M8%201.5a6.5%206.5%200%201%200%206.016%204.035.75.75%200%200%201%201.388-.57%208%208%200%201%201-4.37-4.37.75.75%200%201%201-.569%201.389A6.5%206.5%200%200%200%208%201.5m6.28.22a.75.75%200%200%201%200%201.06l-4.063%204.064a2.5%202.5%200%201%201-1.06-1.06L13.22%201.72a.75.75%200%200%201%201.06%200M7%208a1%201%200%201%200%202%200%201%201%200%200%200-2%200%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/admin/auths"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22m8.533.133%205.25%201.68A1.75%201.75%200%200%201%2015%203.48V7c0%201.566-.32%203.182-1.303%204.682-.983%201.498-2.585%202.813-5.032%203.855a1.7%201.7%200%200%201-1.33%200c-2.447-1.042-4.049-2.357-5.032-3.855C1.32%2010.182%201%208.566%201%207V3.48a1.75%201.75%200%200%201%201.217-1.667l5.25-1.68a1.75%201.75%200%200%201%201.066%200m-.61%201.429zl-5.25%201.68a.25.25%200%200%200-.174.237V7c0%201.36.275%202.666%201.057%203.859.784%201.194%202.121%202.342%204.366%203.298a.2.2%200%200%200%20.154%200c2.245-.957%203.582-2.103%204.366-3.297C13.225%209.666%2013.5%208.358%2013.5%207V3.48a.25.25%200%200%200-.174-.238l-5.25-1.68a.25.25%200%200%200-.153%200M9.5%206.5c0%20.536-.286%201.032-.75%201.3v2.45a.75.75%200%200%201-1.5%200V7.8A1.5%201.5%200%201%201%209.5%206.5%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22m8.533.133%205.25%201.68A1.75%201.75%200%200%201%2015%203.48V7c0%201.566-.32%203.182-1.303%204.682-.983%201.498-2.585%202.813-5.032%203.855a1.7%201.7%200%200%201-1.33%200c-2.447-1.042-4.049-2.357-5.032-3.855C1.32%2010.182%201%208.566%201%207V3.48a1.75%201.75%200%200%201%201.217-1.667l5.25-1.68a1.75%201.75%200%200%201%201.066%200m-.61%201.429zl-5.25%201.68a.25.25%200%200%200-.174.237V7c0%201.36.275%202.666%201.057%203.859.784%201.194%202.121%202.342%204.366%203.298a.2.2%200%200%200%20.154%200c2.245-.957%203.582-2.103%204.366-3.297C13.225%209.666%2013.5%208.358%2013.5%207V3.48a.25.25%200%200%200-.174-.238l-5.25-1.68a.25.25%200%200%200-.153%200M9.5%206.5c0%20.536-.286%201.032-.75%201.3v2.45a.75.75%200%200%201-1.5%200V7.8A1.5%201.5%200%201%201%209.5%206.5%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/admin/orgs"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M1.75%2016A1.75%201.75%200%200%201%200%2014.25V1.75C0%20.784.784%200%201.75%200h8.5C11.216%200%2012%20.784%2012%201.75v12.5q0%20.127-.018.25h2.268a.25.25%200%200%200%20.25-.25V8.285a.25.25%200%200%200-.111-.208l-1.055-.703a.749.749%200%201%201%20.832-1.248l1.055.703c.487.325.779.871.779%201.456v5.965A1.75%201.75%200%200%201%2014.25%2016h-3.5a.8.8%200%200%201-.197-.026q-.148.026-.303.026h-3a.75.75%200%200%201-.75-.75V14h-1v1.25a.75.75%200%200%201-.75.75Zm-.25-1.75c0%20.138.112.25.25.25H4v-1.25a.75.75%200%200%201%20.75-.75h2.5a.75.75%200%200%201%20.75.75v1.25h2.25a.25.25%200%200%200%20.25-.25V1.75a.25.25%200%200%200-.25-.25h-8.5a.25.25%200%200%200-.25.25ZM3.75%206h.5a.75.75%200%200%201%200%201.5h-.5a.75.75%200%200%201%200-1.5M3%203.75A.75.75%200%200%201%203.75%203h.5a.75.75%200%200%201%200%201.5h-.5A.75.75%200%200%201%203%203.75m4%203A.75.75%200%200%201%207.75%206h.5a.75.75%200%200%201%200%201.5h-.5A.75.75%200%200%201%207%206.75M7.75%203h.5a.75.75%200%200%201%200%201.5h-.5a.75.75%200%200%201%200-1.5M3%209.75A.75.75%200%200%201%203.75%209h.5a.75.75%200%200%201%200%201.5h-.5A.75.75%200%200%201%203%209.75M7.75%209h.5a.75.75%200%200%201%200%201.5h-.5a.75.75%200%200%201%200-1.5%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M1.75%2016A1.75%201.75%200%200%201%200%2014.25V1.75C0%20.784.784%200%201.75%200h8.5C11.216%200%2012%20.784%2012%201.75v12.5q0%20.127-.018.25h2.268a.25.25%200%200%200%20.25-.25V8.285a.25.25%200%200%200-.111-.208l-1.055-.703a.749.749%200%201%201%20.832-1.248l1.055.703c.487.325.779.871.779%201.456v5.965A1.75%201.75%200%200%201%2014.25%2016h-3.5a.8.8%200%200%201-.197-.026q-.148.026-.303.026h-3a.75.75%200%200%201-.75-.75V14h-1v1.25a.75.75%200%200%201-.75.75Zm-.25-1.75c0%20.138.112.25.25.25H4v-1.25a.75.75%200%200%201%20.75-.75h2.5a.75.75%200%200%201%20.75.75v1.25h2.25a.25.25%200%200%200%20.25-.25V1.75a.25.25%200%200%200-.25-.25h-8.5a.25.25%200%200%200-.25.25ZM3.75%206h.5a.75.75%200%200%201%200%201.5h-.5a.75.75%200%200%201%200-1.5M3%203.75A.75.75%200%200%201%203.75%203h.5a.75.75%200%200%201%200%201.5h-.5A.75.75%200%200%201%203%203.75m4%203A.75.75%200%200%201%207.75%206h.5a.75.75%200%200%201%200%201.5h-.5A.75.75%200%200%201%207%206.75M7.75%203h.5a.75.75%200%200%201%200%201.5h-.5a.75.75%200%200%201%200-1.5M3%209.75A.75.75%200%200%201%203.75%209h.5a.75.75%200%200%201%200%201.5h-.5A.75.75%200%200%201%203%209.75M7.75%209h.5a.75.75%200%200%201%200%201.5h-.5a.75.75%200%200%201%200-1.5%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/user/settings/organization"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M1.75%2016A1.75%201.75%200%200%201%200%2014.25V1.75C0%20.784.784%200%201.75%200h8.5C11.216%200%2012%20.784%2012%201.75v12.5q0%20.127-.018.25h2.268a.25.25%200%200%200%20.25-.25V8.285a.25.25%200%200%200-.111-.208l-1.055-.703a.749.749%200%201%201%20.832-1.248l1.055.703c.487.325.779.871.779%201.456v5.965A1.75%201.75%200%200%201%2014.25%2016h-3.5a.8.8%200%200%201-.197-.026q-.148.026-.303.026h-3a.75.75%200%200%201-.75-.75V14h-1v1.25a.75.75%200%200%201-.75.75Zm-.25-1.75c0%20.138.112.25.25.25H4v-1.25a.75.75%200%200%201%20.75-.75h2.5a.75.75%200%200%201%20.75.75v1.25h2.25a.25.25%200%200%200%20.25-.25V1.75a.25.25%200%200%200-.25-.25h-8.5a.25.25%200%200%200-.25.25ZM3.75%206h.5a.75.75%200%200%201%200%201.5h-.5a.75.75%200%200%201%200-1.5M3%203.75A.75.75%200%200%201%203.75%203h.5a.75.75%200%200%201%200%201.5h-.5A.75.75%200%200%201%203%203.75m4%203A.75.75%200%200%201%207.75%206h.5a.75.75%200%200%201%200%201.5h-.5A.75.75%200%200%201%207%206.75M7.75%203h.5a.75.75%200%200%201%200%201.5h-.5a.75.75%200%200%201%200-1.5M3%209.75A.75.75%200%200%201%203.75%209h.5a.75.75%200%200%201%200%201.5h-.5A.75.75%200%200%201%203%209.75M7.75%209h.5a.75.75%200%200%201%200%201.5h-.5a.75.75%200%200%201%200-1.5%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M1.75%2016A1.75%201.75%200%200%201%200%2014.25V1.75C0%20.784.784%200%201.75%200h8.5C11.216%200%2012%20.784%2012%201.75v12.5q0%20.127-.018.25h2.268a.25.25%200%200%200%20.25-.25V8.285a.25.25%200%200%200-.111-.208l-1.055-.703a.749.749%200%201%201%20.832-1.248l1.055.703c.487.325.779.871.779%201.456v5.965A1.75%201.75%200%200%201%2014.25%2016h-3.5a.8.8%200%200%201-.197-.026q-.148.026-.303.026h-3a.75.75%200%200%201-.75-.75V14h-1v1.25a.75.75%200%200%201-.75.75Zm-.25-1.75c0%20.138.112.25.25.25H4v-1.25a.75.75%200%200%201%20.75-.75h2.5a.75.75%200%200%201%20.75.75v1.25h2.25a.25.25%200%200%200%20.25-.25V1.75a.25.25%200%200%200-.25-.25h-8.5a.25.25%200%200%200-.25.25ZM3.75%206h.5a.75.75%200%200%201%200%201.5h-.5a.75.75%200%200%201%200-1.5M3%203.75A.75.75%200%200%201%203.75%203h.5a.75.75%200%200%201%200%201.5h-.5A.75.75%200%200%201%203%203.75m4%203A.75.75%200%200%201%207.75%206h.5a.75.75%200%200%201%200%201.5h-.5A.75.75%200%200%201%207%206.75M7.75%203h.5a.75.75%200%200%201%200%201.5h-.5a.75.75%200%200%201%200-1.5M3%209.75A.75.75%200%200%201%203.75%209h.5a.75.75%200%200%201%200%201.5h-.5A.75.75%200%200%201%203%209.75M7.75%209h.5a.75.75%200%200%201%200%201.5h-.5a.75.75%200%200%201%200-1.5%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/admin/users"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M2%205.5a3.5%203.5%200%201%201%205.898%202.549%205.51%205.51%200%200%201%203.034%204.084.75.75%200%201%201-1.482.235%204%204%200%200%200-7.9%200%20.75.75%200%200%201-1.482-.236A5.5%205.5%200%200%201%203.102%208.05%203.5%203.5%200%200%201%202%205.5M11%204a3.001%203.001%200%200%201%202.22%205.018%205%205%200%200%201%202.56%203.012.749.749%200%200%201-.885.954.75.75%200%200%201-.549-.514%203.51%203.51%200%200%200-2.522-2.372.75.75%200%200%201-.574-.73v-.352a.75.75%200%200%201%20.416-.672A1.5%201.5%200%200%200%2011%205.5.75.75%200%200%201%2011%204m-5.5-.5a2%202%200%201%200-.001%203.999A2%202%200%200%200%205.5%203.5%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M2%205.5a3.5%203.5%200%201%201%205.898%202.549%205.51%205.51%200%200%201%203.034%204.084.75.75%200%201%201-1.482.235%204%204%200%200%200-7.9%200%20.75.75%200%200%201-1.482-.236A5.5%205.5%200%200%201%203.102%208.05%203.5%203.5%200%200%201%202%205.5M11%204a3.001%203.001%200%200%201%202.22%205.018%205%205%200%200%201%202.56%203.012.749.749%200%200%201-.885.954.75.75%200%200%201-.549-.514%203.51%203.51%200%200%200-2.522-2.372.75.75%200%200%201-.574-.73v-.352a.75.75%200%200%201%20.416-.672A1.5%201.5%200%200%200%2011%205.5.75.75%200%200%201%2011%204m-5.5-.5a2%202%200%201%200-.001%203.999A2%202%200%200%200%205.5%203.5%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/admin/emails"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M1.75%202h12.5c.966%200%201.75.784%201.75%201.75v8.5A1.75%201.75%200%200%201%2014.25%2014H1.75A1.75%201.75%200%200%201%200%2012.25v-8.5C0%202.784.784%202%201.75%202M1.5%2012.251c0%20.138.112.25.25.25h12.5a.25.25%200%200%200%20.25-.25V5.809L8.38%209.397a.75.75%200%200%201-.76%200L1.5%205.809zm13-8.181v-.32a.25.25%200%200%200-.25-.25H1.75a.25.25%200%200%200-.25.25v.32L8%207.88Z%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M1.75%202h12.5c.966%200%201.75.784%201.75%201.75v8.5A1.75%201.75%200%200%201%2014.25%2014H1.75A1.75%201.75%200%200%201%200%2012.25v-8.5C0%202.784.784%202%201.75%202M1.5%2012.251c0%20.138.112.25.25.25h12.5a.25.25%200%200%200%20.25-.25V5.809L8.38%209.397a.75.75%200%200%201-.76%200L1.5%205.809zm13-8.181v-.32a.25.25%200%200%200-.25-.25H1.75a.25.25%200%200%200-.25.25v.32L8%207.88Z%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/admin/packages"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22m8.878.392%205.25%203.045c.54.314.872.89.872%201.514v6.098a1.75%201.75%200%200%201-.872%201.514l-5.25%203.045a1.75%201.75%200%200%201-1.756%200l-5.25-3.045A1.75%201.75%200%200%201%201%2011.049V4.951c0-.624.332-1.201.872-1.514L7.122.392a1.75%201.75%200%200%201%201.756%200M7.875%201.69l-4.63%202.685L8%207.133l4.755-2.758-4.63-2.685a.25.25%200%200%200-.25%200M2.5%205.677v5.372c0%20.09.047.171.125.216l4.625%202.683V8.432Zm6.25%208.271%204.625-2.683a.25.25%200%200%200%20.125-.216V5.677L8.75%208.432Z%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22m8.878.392%205.25%203.045c.54.314.872.89.872%201.514v6.098a1.75%201.75%200%200%201-.872%201.514l-5.25%203.045a1.75%201.75%200%200%201-1.756%200l-5.25-3.045A1.75%201.75%200%200%201%201%2011.049V4.951c0-.624.332-1.201.872-1.514L7.122.392a1.75%201.75%200%200%201%201.756%200M7.875%201.69l-4.63%202.685L8%207.133l4.755-2.758-4.63-2.685a.25.25%200%200%200-.25%200M2.5%205.677v5.372c0%20.09.047.171.125.216l4.625%202.683V8.432Zm6.25%208.271%204.625-2.683a.25.25%200%200%200%20.125-.216V5.677L8.75%208.432Z%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/user/settings/packages"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22m8.878.392%205.25%203.045c.54.314.872.89.872%201.514v6.098a1.75%201.75%200%200%201-.872%201.514l-5.25%203.045a1.75%201.75%200%200%201-1.756%200l-5.25-3.045A1.75%201.75%200%200%201%201%2011.049V4.951c0-.624.332-1.201.872-1.514L7.122.392a1.75%201.75%200%200%201%201.756%200M7.875%201.69l-4.63%202.685L8%207.133l4.755-2.758-4.63-2.685a.25.25%200%200%200-.25%200M2.5%205.677v5.372c0%20.09.047.171.125.216l4.625%202.683V8.432Zm6.25%208.271%204.625-2.683a.25.25%200%200%200%20.125-.216V5.677L8.75%208.432Z%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22m8.878.392%205.25%203.045c.54.314.872.89.872%201.514v6.098a1.75%201.75%200%200%201-.872%201.514l-5.25%203.045a1.75%201.75%200%200%201-1.756%200l-5.25-3.045A1.75%201.75%200%200%201%201%2011.049V4.951c0-.624.332-1.201.872-1.514L7.122.392a1.75%201.75%200%200%201%201.756%200M7.875%201.69l-4.63%202.685L8%207.133l4.755-2.758-4.63-2.685a.25.25%200%200%200-.25%200M2.5%205.677v5.372c0%20.09.047.171.125.216l4.625%202.683V8.432Zm6.25%208.271%204.625-2.683a.25.25%200%200%200%20.125-.216V5.677L8.75%208.432Z%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/admin/repos"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M2%202.5A2.5%202.5%200%200%201%204.5%200h8.75a.75.75%200%200%201%20.75.75v12.5a.75.75%200%200%201-.75.75h-2.5a.75.75%200%200%201%200-1.5h1.75v-2h-8a1%201%200%200%200-.714%201.7.75.75%200%201%201-1.072%201.05A2.5%202.5%200%200%201%202%2011.5Zm10.5-1h-8a1%201%200%200%200-1%201v6.708A2.5%202.5%200%200%201%204.5%209h8ZM5%2012.25a.25.25%200%200%201%20.25-.25h3.5a.25.25%200%200%201%20.25.25v3.25a.25.25%200%200%201-.4.2l-1.45-1.087a.25.25%200%200%200-.3%200L5.4%2015.7a.25.25%200%200%201-.4-.2Z%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M2%202.5A2.5%202.5%200%200%201%204.5%200h8.75a.75.75%200%200%201%20.75.75v12.5a.75.75%200%200%201-.75.75h-2.5a.75.75%200%200%201%200-1.5h1.75v-2h-8a1%201%200%200%200-.714%201.7.75.75%200%201%201-1.072%201.05A2.5%202.5%200%200%201%202%2011.5Zm10.5-1h-8a1%201%200%200%200-1%201v6.708A2.5%202.5%200%200%201%204.5%209h8ZM5%2012.25a.25.25%200%200%201%20.25-.25h3.5a.25.25%200%200%201%20.25.25v3.25a.25.25%200%200%201-.4.2l-1.45-1.087a.25.25%200%200%200-.3%200L5.4%2015.7a.25.25%200%200%201-.4-.2Z%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/user/settings/repos"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M2%202.5A2.5%202.5%200%200%201%204.5%200h8.75a.75.75%200%200%201%20.75.75v12.5a.75.75%200%200%201-.75.75h-2.5a.75.75%200%200%201%200-1.5h1.75v-2h-8a1%201%200%200%200-.714%201.7.75.75%200%201%201-1.072%201.05A2.5%202.5%200%200%201%202%2011.5Zm10.5-1h-8a1%201%200%200%200-1%201v6.708A2.5%202.5%200%200%201%204.5%209h8ZM5%2012.25a.25.25%200%200%201%20.25-.25h3.5a.25.25%200%200%201%20.25.25v3.25a.25.25%200%200%201-.4.2l-1.45-1.087a.25.25%200%200%200-.3%200L5.4%2015.7a.25.25%200%200%201-.4-.2Z%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M2%202.5A2.5%202.5%200%200%201%204.5%200h8.75a.75.75%200%200%201%20.75.75v12.5a.75.75%200%200%201-.75.75h-2.5a.75.75%200%200%201%200-1.5h1.75v-2h-8a1%201%200%200%200-.714%201.7.75.75%200%201%201-1.072%201.05A2.5%202.5%200%200%201%202%2011.5Zm10.5-1h-8a1%201%200%200%200-1%201v6.708A2.5%202.5%200%200%201%204.5%209h8ZM5%2012.25a.25.25%200%200%201%20.25-.25h3.5a.25.25%200%200%201%20.25.25v3.25a.25.25%200%200%201-.4.2l-1.45-1.087a.25.25%200%200%200-.3%200L5.4%2015.7a.25.25%200%200%201-.4-.2Z%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/admin/applications"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M1.5%203.25c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5A1.75%201.75%200%200%201%205.75%207.5h-2.5A1.75%201.75%200%200%201%201.5%205.75Zm7%200c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5a1.75%201.75%200%200%201-1.75%201.75h-2.5A1.75%201.75%200%200%201%208.5%205.75Zm-7%207c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5a1.75%201.75%200%200%201-1.75%201.75h-2.5a1.75%201.75%200%200%201-1.75-1.75Zm7%200c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5a1.75%201.75%200%200%201-1.75%201.75h-2.5a1.75%201.75%200%200%201-1.75-1.75ZM3.25%203a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5A.25.25%200%200%200%206%205.75v-2.5A.25.25%200%200%200%205.75%203Zm7%200a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5a.25.25%200%200%200%20.25-.25v-2.5a.25.25%200%200%200-.25-.25Zm-7%207a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5a.25.25%200%200%200%20.25-.25v-2.5a.25.25%200%200%200-.25-.25Zm7%200a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5a.25.25%200%200%200%20.25-.25v-2.5a.25.25%200%200%200-.25-.25Z%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M1.5%203.25c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5A1.75%201.75%200%200%201%205.75%207.5h-2.5A1.75%201.75%200%200%201%201.5%205.75Zm7%200c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5a1.75%201.75%200%200%201-1.75%201.75h-2.5A1.75%201.75%200%200%201%208.5%205.75Zm-7%207c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5a1.75%201.75%200%200%201-1.75%201.75h-2.5a1.75%201.75%200%200%201-1.75-1.75Zm7%200c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5a1.75%201.75%200%200%201-1.75%201.75h-2.5a1.75%201.75%200%200%201-1.75-1.75ZM3.25%203a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5A.25.25%200%200%200%206%205.75v-2.5A.25.25%200%200%200%205.75%203Zm7%200a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5a.25.25%200%200%200%20.25-.25v-2.5a.25.25%200%200%200-.25-.25Zm-7%207a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5a.25.25%200%200%200%20.25-.25v-2.5a.25.25%200%200%200-.25-.25Zm7%200a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5a.25.25%200%200%200%20.25-.25v-2.5a.25.25%200%200%200-.25-.25Z%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/user/settings/applications"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M1.5%203.25c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5A1.75%201.75%200%200%201%205.75%207.5h-2.5A1.75%201.75%200%200%201%201.5%205.75Zm7%200c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5a1.75%201.75%200%200%201-1.75%201.75h-2.5A1.75%201.75%200%200%201%208.5%205.75Zm-7%207c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5a1.75%201.75%200%200%201-1.75%201.75h-2.5a1.75%201.75%200%200%201-1.75-1.75Zm7%200c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5a1.75%201.75%200%200%201-1.75%201.75h-2.5a1.75%201.75%200%200%201-1.75-1.75ZM3.25%203a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5A.25.25%200%200%200%206%205.75v-2.5A.25.25%200%200%200%205.75%203Zm7%200a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5a.25.25%200%200%200%20.25-.25v-2.5a.25.25%200%200%200-.25-.25Zm-7%207a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5a.25.25%200%200%200%20.25-.25v-2.5a.25.25%200%200%200-.25-.25Zm7%200a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5a.25.25%200%200%200%20.25-.25v-2.5a.25.25%200%200%200-.25-.25Z%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M1.5%203.25c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5A1.75%201.75%200%200%201%205.75%207.5h-2.5A1.75%201.75%200%200%201%201.5%205.75Zm7%200c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5a1.75%201.75%200%200%201-1.75%201.75h-2.5A1.75%201.75%200%200%201%208.5%205.75Zm-7%207c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5a1.75%201.75%200%200%201-1.75%201.75h-2.5a1.75%201.75%200%200%201-1.75-1.75Zm7%200c0-.966.784-1.75%201.75-1.75h2.5c.966%200%201.75.784%201.75%201.75v2.5a1.75%201.75%200%200%201-1.75%201.75h-2.5a1.75%201.75%200%200%201-1.75-1.75ZM3.25%203a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5A.25.25%200%200%200%206%205.75v-2.5A.25.25%200%200%200%205.75%203Zm7%200a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5a.25.25%200%200%200%20.25-.25v-2.5a.25.25%200%200%200-.25-.25Zm-7%207a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5a.25.25%200%200%200%20.25-.25v-2.5a.25.25%200%200%200-.25-.25Zm7%200a.25.25%200%200%200-.25.25v2.5c0%20.138.112.25.25.25h2.5a.25.25%200%200%200%20.25-.25v-2.5a.25.25%200%200%200-.25-.25Z%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/user/settings/authorized-integrations"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M4%208H2.5a1%201%200%200%200-1%201v5.25a.75.75%200%200%201-1.5%200V9a2.5%202.5%200%200%201%202.5-2.5H4V5.133a1.75%201.75%200%200%201%201.533-1.737l2.831-.353.76-.913c.332-.4.825-.63%201.344-.63h.782c.966%200%201.75.784%201.75%201.75V4h2.25a.75.75%200%200%201%200%201.5H13v4h2.25a.75.75%200%200%201%200%201.5H13v.75a1.75%201.75%200%200%201-1.75%201.75h-.782c-.519%200-1.012-.23-1.344-.63l-.761-.912-2.83-.354A1.75%201.75%200%200%201%204%209.867Zm6.276-4.91-.95%201.14a.75.75%200%200%201-.483.265l-3.124.39a.25.25%200%200%200-.219.248v4.734c0%20.126.094.233.219.249l3.124.39a.75.75%200%200%201%20.483.264l.95%201.14a.25.25%200%200%200%20.192.09h.782a.25.25%200%200%200%20.25-.25v-8.5a.25.25%200%200%200-.25-.25h-.782a.25.25%200%200%200-.192.09%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M4%208H2.5a1%201%200%200%200-1%201v5.25a.75.75%200%200%201-1.5%200V9a2.5%202.5%200%200%201%202.5-2.5H4V5.133a1.75%201.75%200%200%201%201.533-1.737l2.831-.353.76-.913c.332-.4.825-.63%201.344-.63h.782c.966%200%201.75.784%201.75%201.75V4h2.25a.75.75%200%200%201%200%201.5H13v4h2.25a.75.75%200%200%201%200%201.5H13v.75a1.75%201.75%200%200%201-1.75%201.75h-.782c-.519%200-1.012-.23-1.344-.63l-.761-.912-2.83-.354A1.75%201.75%200%200%201%204%209.867Zm6.276-4.91-.95%201.14a.75.75%200%200%201-.483.265l-3.124.39a.25.25%200%200%200-.219.248v4.734c0%20.126.094.233.219.249l3.124.39a.75.75%200%200%201%20.483.264l.95%201.14a.25.25%200%200%200%20.192.09h.782a.25.25%200%200%200%20.25-.25v-8.5a.25.25%200%200%200-.25-.25h-.782a.25.25%200%200%200-.192.09%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/admin/hooks"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M5.5%204.25a2.25%202.25%200%200%201%204.5%200%20.75.75%200%200%200%201.5%200%203.75%203.75%200%201%200-6.14%202.889l-2.272%204.258a.75.75%200%200%200%201.324.706L7%207.25a.75.75%200%200%200-.309-1.015A2.25%202.25%200%200%201%205.5%204.25%22%2F%3E%3Cpath%20d%3D%22M7.364%203.607a.75.75%200%200%201%201.03.257l2.608%204.349a3.75%203.75%200%201%201-.628%206.785.75.75%200%200%201%20.752-1.299%202.25%202.25%200%201%200-.033-3.88.75.75%200%200%201-1.03-.256L7.107%204.636a.75.75%200%200%201%20.257-1.03Z%22%2F%3E%3Cpath%20d%3D%22M2.9%208.776A.75.75%200%200%201%202.625%209.8%202.25%202.25%200%201%200%206%2011.75a.75.75%200%200%201%20.75-.751h5.5a.75.75%200%200%201%200%201.5H7.425a3.751%203.751%200%201%201-5.55-3.998.75.75%200%200%201%201.024.274Z%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M5.5%204.25a2.25%202.25%200%200%201%204.5%200%20.75.75%200%200%200%201.5%200%203.75%203.75%200%201%200-6.14%202.889l-2.272%204.258a.75.75%200%200%200%201.324.706L7%207.25a.75.75%200%200%200-.309-1.015A2.25%202.25%200%200%201%205.5%204.25%22%2F%3E%3Cpath%20d%3D%22M7.364%203.607a.75.75%200%200%201%201.03.257l2.608%204.349a3.75%203.75%200%201%201-.628%206.785.75.75%200%200%201%20.752-1.299%202.25%202.25%200%201%200-.033-3.88.75.75%200%200%201-1.03-.256L7.107%204.636a.75.75%200%200%201%20.257-1.03Z%22%2F%3E%3Cpath%20d%3D%22M2.9%208.776A.75.75%200%200%201%202.625%209.8%202.25%202.25%200%201%200%206%2011.75a.75.75%200%200%201%20.75-.751h5.5a.75.75%200%200%201%200%201.5H7.425a3.751%203.751%200%201%201-5.55-3.998.75.75%200%200%201%201.024.274Z%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href$="/settings/hooks"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M5.5%204.25a2.25%202.25%200%200%201%204.5%200%20.75.75%200%200%200%201.5%200%203.75%203.75%200%201%200-6.14%202.889l-2.272%204.258a.75.75%200%200%200%201.324.706L7%207.25a.75.75%200%200%200-.309-1.015A2.25%202.25%200%200%201%205.5%204.25%22%2F%3E%3Cpath%20d%3D%22M7.364%203.607a.75.75%200%200%201%201.03.257l2.608%204.349a3.75%203.75%200%201%201-.628%206.785.75.75%200%200%201%20.752-1.299%202.25%202.25%200%201%200-.033-3.88.75.75%200%200%201-1.03-.256L7.107%204.636a.75.75%200%200%201%20.257-1.03Z%22%2F%3E%3Cpath%20d%3D%22M2.9%208.776A.75.75%200%200%201%202.625%209.8%202.25%202.25%200%201%200%206%2011.75a.75.75%200%200%201%20.75-.751h5.5a.75.75%200%200%201%200%201.5H7.425a3.751%203.751%200%201%201-5.55-3.998.75.75%200%200%201%201.024.274Z%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M5.5%204.25a2.25%202.25%200%200%201%204.5%200%20.75.75%200%200%200%201.5%200%203.75%203.75%200%201%200-6.14%202.889l-2.272%204.258a.75.75%200%200%200%201.324.706L7%207.25a.75.75%200%200%200-.309-1.015A2.25%202.25%200%200%201%205.5%204.25%22%2F%3E%3Cpath%20d%3D%22M7.364%203.607a.75.75%200%200%201%201.03.257l2.608%204.349a3.75%203.75%200%201%201-.628%206.785.75.75%200%200%201%20.752-1.299%202.25%202.25%200%201%200-.033-3.88.75.75%200%200%201-1.03-.256L7.107%204.636a.75.75%200%200%201%20.257-1.03Z%22%2F%3E%3Cpath%20d%3D%22M2.9%208.776A.75.75%200%200%201%202.625%209.8%202.25%202.25%200%201%200%206%2011.75a.75.75%200%200%201%20.75-.751h5.5a.75.75%200%200%201%200%201.5H7.425a3.751%203.751%200%201%201-5.55-3.998.75.75%200%200%201%201.024.274Z%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href$="/actions/runners"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M8%200a8%208%200%201%201%200%2016A8%208%200%200%201%208%200M1.5%208a6.5%206.5%200%201%200%2013%200%206.5%206.5%200%200%200-13%200m4.879-2.773%204.264%202.559a.25.25%200%200%201%200%20.428l-4.264%202.559A.25.25%200%200%201%206%2010.559V5.442a.25.25%200%200%201%20.379-.215%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M8%200a8%208%200%201%201%200%2016A8%208%200%200%201%208%200M1.5%208a6.5%206.5%200%201%200%2013%200%206.5%206.5%200%200%200-13%200m4.879-2.773%204.264%202.559a.25.25%200%200%201%200%20.428l-4.264%202.559A.25.25%200%200%201%206%2010.559V5.442a.25.25%200%200%201%20.379-.215%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href$="/actions/variables"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22m11.28%203.22%204.25%204.25a.75.75%200%200%201%200%201.06l-4.25%204.25a.749.749%200%200%201-1.275-.326.75.75%200%200%201%20.215-.734L13.94%208l-3.72-3.72a.749.749%200%200%201%20.326-1.275.75.75%200%200%201%20.734.215m-6.56%200a.75.75%200%200%201%201.042.018.75.75%200%200%201%20.018%201.042L2.06%208l3.72%203.72a.749.749%200%200%201-.326%201.275.75.75%200%200%201-.734-.215L.47%208.53a.75.75%200%200%201%200-1.06Z%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22m11.28%203.22%204.25%204.25a.75.75%200%200%201%200%201.06l-4.25%204.25a.749.749%200%200%201-1.275-.326.75.75%200%200%201%20.215-.734L13.94%208l-3.72-3.72a.749.749%200%200%201%20.326-1.275.75.75%200%200%201%20.734.215m-6.56%200a.75.75%200%200%201%201.042.018.75.75%200%200%201%20.018%201.042L2.06%208l3.72%203.72a.749.749%200%200%201-.326%201.275.75.75%200%200%201-.734-.215L.47%208.53a.75.75%200%200%201%200-1.06Z%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href$="/actions/secrets"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M4%204a4%204%200%200%201%208%200v2h.25c.966%200%201.75.784%201.75%201.75v5.5A1.75%201.75%200%200%201%2012.25%2015h-8.5A1.75%201.75%200%200%201%202%2013.25v-5.5C2%206.784%202.784%206%203.75%206H4Zm8.25%203.5h-8.5a.25.25%200%200%200-.25.25v5.5c0%20.138.112.25.25.25h8.5a.25.25%200%200%200%20.25-.25v-5.5a.25.25%200%200%200-.25-.25M10.5%206V4a2.5%202.5%200%201%200-5%200v2Z%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M4%204a4%204%200%200%201%208%200v2h.25c.966%200%201.75.784%201.75%201.75v5.5A1.75%201.75%200%200%201%2012.25%2015h-8.5A1.75%201.75%200%200%201%202%2013.25v-5.5C2%206.784%202.784%206%203.75%206H4Zm8.25%203.5h-8.5a.25.25%200%200%200-.25.25v5.5c0%20.138.112.25.25.25h8.5a.25.25%200%200%200%20.25-.25v-5.5a.25.25%200%200%200-.25-.25M10.5%206V4a2.5%202.5%200%201%200-5%200v2Z%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/admin/config"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M15%202.75a.75.75%200%200%201-.75.75h-4a.75.75%200%200%201%200-1.5h4a.75.75%200%200%201%20.75.75m-8.5.75v1.25a.75.75%200%200%200%201.5%200v-4a.75.75%200%200%200-1.5%200V2H1.75a.75.75%200%200%200%200%201.5zm1.25%205.25a.75.75%200%200%200%200-1.5h-6a.75.75%200%200%200%200%201.5zM15%208a.75.75%200%200%201-.75.75H11.5V10a.75.75%200%201%201-1.5%200V6a.75.75%200%200%201%201.5%200v1.25h2.75A.75.75%200%200%201%2015%208m-9%205.25v-2a.75.75%200%200%200-1.5%200v1.25H1.75a.75.75%200%200%200%200%201.5H4.5v1.25a.75.75%200%200%200%201.5%200zm9%200a.75.75%200%200%201-.75.75h-6a.75.75%200%200%201%200-1.5h6a.75.75%200%200%201%20.75.75%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M15%202.75a.75.75%200%200%201-.75.75h-4a.75.75%200%200%201%200-1.5h4a.75.75%200%200%201%20.75.75m-8.5.75v1.25a.75.75%200%200%200%201.5%200v-4a.75.75%200%200%200-1.5%200V2H1.75a.75.75%200%200%200%200%201.5zm1.25%205.25a.75.75%200%200%200%200-1.5h-6a.75.75%200%200%200%200%201.5zM15%208a.75.75%200%200%201-.75.75H11.5V10a.75.75%200%201%201-1.5%200V6a.75.75%200%200%201%201.5%200v1.25h2.75A.75.75%200%200%201%2015%208m-9%205.25v-2a.75.75%200%200%200-1.5%200v1.25H1.75a.75.75%200%200%200%200%201.5H4.5v1.25a.75.75%200%200%200%201.5%200zm9%200a.75.75%200%200%201-.75.75h-6a.75.75%200%200%201%200-1.5h6a.75.75%200%200%201%20.75.75%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/admin/config/settings"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M15%202.75a.75.75%200%200%201-.75.75h-4a.75.75%200%200%201%200-1.5h4a.75.75%200%200%201%20.75.75m-8.5.75v1.25a.75.75%200%200%200%201.5%200v-4a.75.75%200%200%200-1.5%200V2H1.75a.75.75%200%200%200%200%201.5zm1.25%205.25a.75.75%200%200%200%200-1.5h-6a.75.75%200%200%200%200%201.5zM15%208a.75.75%200%200%201-.75.75H11.5V10a.75.75%200%201%201-1.5%200V6a.75.75%200%200%201%201.5%200v1.25h2.75A.75.75%200%200%201%2015%208m-9%205.25v-2a.75.75%200%200%200-1.5%200v1.25H1.75a.75.75%200%200%200%200%201.5H4.5v1.25a.75.75%200%200%200%201.5%200zm9%200a.75.75%200%200%201-.75.75h-6a.75.75%200%200%201%200-1.5h6a.75.75%200%200%201%20.75.75%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M15%202.75a.75.75%200%200%201-.75.75h-4a.75.75%200%200%201%200-1.5h4a.75.75%200%200%201%20.75.75m-8.5.75v1.25a.75.75%200%200%200%201.5%200v-4a.75.75%200%200%200-1.5%200V2H1.75a.75.75%200%200%200%200%201.5zm1.25%205.25a.75.75%200%200%200%200-1.5h-6a.75.75%200%200%200%200%201.5zM15%208a.75.75%200%200%201-.75.75H11.5V10a.75.75%200%201%201-1.5%200V6a.75.75%200%200%201%201.5%200v1.25h2.75A.75.75%200%200%201%2015%208m-9%205.25v-2a.75.75%200%200%200-1.5%200v1.25H1.75a.75.75%200%200%200%200%201.5H4.5v1.25a.75.75%200%200%200%201.5%200zm9%200a.75.75%200%200%201-.75.75h-6a.75.75%200%200%201%200-1.5h6a.75.75%200%200%201%20.75.75%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/admin/notices"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M8%2016a2%202%200%200%200%201.985-1.75c.017-.137-.097-.25-.235-.25h-3.5c-.138%200-.252.113-.235.25A2%202%200%200%200%208%2016M3%205a5%205%200%200%201%2010%200v2.947q0%20.076.042.139l1.703%202.555A1.519%201.519%200%200%201%2013.482%2013H2.518a1.516%201.516%200%200%201-1.263-2.36l1.703-2.554A.26.26%200%200%200%203%207.947Zm5-3.5A3.5%203.5%200%200%200%204.5%205v2.947c0%20.346-.102.683-.294.97l-1.703%202.556-.003.01.001.006q0%20.003.004.006l.006.004.007.001h10.964l.007-.001.006-.004.004-.006.001-.007-.003-.01-1.703-2.554a1.75%201.75%200%200%201-.294-.97V5A3.5%203.5%200%200%200%208%201.5%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M8%2016a2%202%200%200%200%201.985-1.75c.017-.137-.097-.25-.235-.25h-3.5c-.138%200-.252.113-.235.25A2%202%200%200%200%208%2016M3%205a5%205%200%200%201%2010%200v2.947q0%20.076.042.139l1.703%202.555A1.519%201.519%200%200%201%2013.482%2013H2.518a1.516%201.516%200%200%201-1.263-2.36l1.703-2.554A.26.26%200%200%200%203%207.947Zm5-3.5A3.5%203.5%200%200%200%204.5%205v2.947c0%20.346-.102.683-.294.97l-1.703%202.556-.003.01.001.006q0%20.003.004.006l.006.004.007.001h10.964l.007-.001.006-.004.004-.006.001-.007-.003-.01-1.703-2.554a1.75%201.75%200%200%201-.294-.97V5A3.5%203.5%200%200%200%208%201.5%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/admin/monitor/stats"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M1.5%201.75V13.5h13.75a.75.75%200%200%201%200%201.5H.75a.75.75%200%200%201-.75-.75V1.75a.75.75%200%200%201%201.5%200m14.28%202.53-5.25%205.25a.75.75%200%200%201-1.06%200L7%207.06%204.28%209.78a.75.75%200%200%201-1.042-.018.75.75%200%200%201-.018-1.042l3.25-3.25a.75.75%200%200%201%201.06%200L10%207.94l4.72-4.72a.75.75%200%200%201%201.042.018.75.75%200%200%201%20.018%201.042%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M1.5%201.75V13.5h13.75a.75.75%200%200%201%200%201.5H.75a.75.75%200%200%201-.75-.75V1.75a.75.75%200%200%201%201.5%200m14.28%202.53-5.25%205.25a.75.75%200%200%201-1.06%200L7%207.06%204.28%209.78a.75.75%200%200%201-1.042-.018.75.75%200%200%201-.018-1.042l3.25-3.25a.75.75%200%200%201%201.06%200L10%207.94l4.72-4.72a.75.75%200%200%201%201.042.018.75.75%200%200%201%20.018%201.042%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/admin/monitor/cron"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M8%200a8%208%200%201%201%200%2016A8%208%200%200%201%208%200M1.5%208a6.5%206.5%200%201%200%2013%200%206.5%206.5%200%200%200-13%200m7-3.25v2.992l2.028.812a.75.75%200%200%201-.557%201.392l-2.5-1A.75.75%200%200%201%207%208.25v-3.5a.75.75%200%200%201%201.5%200%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M8%200a8%208%200%201%201%200%2016A8%208%200%200%201%208%200M1.5%208a6.5%206.5%200%201%200%2013%200%206.5%206.5%200%200%200-13%200m7-3.25v2.992l2.028.812a.75.75%200%200%201-.557%201.392l-2.5-1A.75.75%200%200%201%207%208.25v-3.5a.75.75%200%200%201%201.5%200%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/admin/monitor/queue"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M7.122.392a1.75%201.75%200%200%201%201.756%200l5.003%202.902c.83.481.83%201.68%200%202.162L8.878%208.358a1.75%201.75%200%200%201-1.756%200L2.119%205.456a1.25%201.25%200%200%201%200-2.162ZM8.125%201.69a.25.25%200%200%200-.25%200l-4.63%202.685%204.63%202.685a.25.25%200%200%200%20.25%200l4.63-2.685ZM1.601%207.789a.75.75%200%200%201%201.025-.273l5.249%203.044a.25.25%200%200%200%20.25%200l5.249-3.044a.75.75%200%200%201%20.752%201.298l-5.248%203.044a1.75%201.75%200%200%201-1.756%200L1.874%208.814A.75.75%200%200%201%201.6%207.789Zm0%203.5a.75.75%200%200%201%201.025-.273l5.249%203.044a.25.25%200%200%200%20.25%200l5.249-3.044a.75.75%200%200%201%20.752%201.298l-5.248%203.044a1.75%201.75%200%200%201-1.756%200l-5.248-3.044a.75.75%200%200%201-.273-1.025%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M7.122.392a1.75%201.75%200%200%201%201.756%200l5.003%202.902c.83.481.83%201.68%200%202.162L8.878%208.358a1.75%201.75%200%200%201-1.756%200L2.119%205.456a1.25%201.25%200%200%201%200-2.162ZM8.125%201.69a.25.25%200%200%200-.25%200l-4.63%202.685%204.63%202.685a.25.25%200%200%200%20.25%200l4.63-2.685ZM1.601%207.789a.75.75%200%200%201%201.025-.273l5.249%203.044a.25.25%200%200%200%20.25%200l5.249-3.044a.75.75%200%200%201%20.752%201.298l-5.248%203.044a1.75%201.75%200%200%201-1.756%200L1.874%208.814A.75.75%200%200%201%201.6%207.789Zm0%203.5a.75.75%200%200%201%201.025-.273l5.249%203.044a.25.25%200%200%200%20.25%200l5.249-3.044a.75.75%200%200%201%20.752%201.298l-5.248%203.044a1.75%201.75%200%200%201-1.756%200l-5.248-3.044a.75.75%200%200%201-.273-1.025%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/admin/monitor/stacktrace"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M4.72.22a.75.75%200%200%201%201.06%200l1%20.999a3.5%203.5%200%200%201%202.441%200l.999-1a.748.748%200%200%201%201.265.332.75.75%200%200%201-.205.729l-.775.776c.616.63.995%201.493.995%202.444v.327q0%20.15-.025.292c.408.14.764.392%201.029.722l1.968-.787a.75.75%200%200%201%20.556%201.392L13%207.258V9h2.25a.75.75%200%200%201%200%201.5H13v.5q-.002.615-.141%201.186l2.17.868a.75.75%200%200%201-.557%201.392l-2.184-.873A5%205%200%200%201%208%2016a5%205%200%200%201-4.288-2.427l-2.183.873a.75.75%200%200%201-.558-1.392l2.17-.868A5%205%200%200%201%203%2011v-.5H.75a.75.75%200%200%201%200-1.5H3V7.258L.971%206.446a.75.75%200%200%201%20.558-1.392l1.967.787c.265-.33.62-.583%201.03-.722a1.7%201.7%200%200%201-.026-.292V4.5c0-.951.38-1.814.995-2.444L4.72%201.28a.75.75%200%200%201%200-1.06m.53%206.28a.75.75%200%200%200-.75.75V11a3.5%203.5%200%201%200%207%200V7.25a.75.75%200%200%200-.75-.75ZM6.173%205h3.654A.17.17%200%200%200%2010%204.827V4.5a2%202%200%201%200-4%200v.327c0%20.096.077.173.173.173%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M4.72.22a.75.75%200%200%201%201.06%200l1%20.999a3.5%203.5%200%200%201%202.441%200l.999-1a.748.748%200%200%201%201.265.332.75.75%200%200%201-.205.729l-.775.776c.616.63.995%201.493.995%202.444v.327q0%20.15-.025.292c.408.14.764.392%201.029.722l1.968-.787a.75.75%200%200%201%20.556%201.392L13%207.258V9h2.25a.75.75%200%200%201%200%201.5H13v.5q-.002.615-.141%201.186l2.17.868a.75.75%200%200%201-.557%201.392l-2.184-.873A5%205%200%200%201%208%2016a5%205%200%200%201-4.288-2.427l-2.183.873a.75.75%200%200%201-.558-1.392l2.17-.868A5%205%200%200%201%203%2011v-.5H.75a.75.75%200%200%201%200-1.5H3V7.258L.971%206.446a.75.75%200%200%201%20.558-1.392l1.967.787c.265-.33.62-.583%201.03-.722a1.7%201.7%200%200%201-.026-.292V4.5c0-.951.38-1.814.995-2.444L4.72%201.28a.75.75%200%200%201%200-1.06m.53%206.28a.75.75%200%200%200-.75.75V11a3.5%203.5%200%201%200%207%200V7.25a.75.75%200%200%200-.75-.75ZM6.173%205h3.654A.17.17%200%200%200%2010%204.827V4.5a2%202%200%201%200-4%200v.327c0%20.096.077.173.173.173%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/user/settings"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M10.561%208.073a6%206%200%200%201%203.432%205.142.75.75%200%201%201-1.498.07%204.5%204.5%200%200%200-8.99%200%20.75.75%200%200%201-1.498-.07%206%206%200%200%201%203.431-5.142%203.999%203.999%200%201%201%205.123%200M10.5%205a2.5%202.5%200%201%200-5%200%202.5%202.5%200%200%200%205%200%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M10.561%208.073a6%206%200%200%201%203.432%205.142.75.75%200%201%201-1.498.07%204.5%204.5%200%200%200-8.99%200%20.75.75%200%200%201-1.498-.07%206%206%200%200%201%203.431-5.142%203.999%203.999%200%201%201%205.123%200M10.5%205a2.5%202.5%200%201%200-5%200%202.5%202.5%200%200%200%205%200%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/user/settings/account"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M8%200a8%208%200%200%201%20.701.031C9.444.095%209.99.645%2010.16%201.29l.288%201.107c.018.066.079.158.212.224q.347.171.668.386c.123.082.233.09.299.071l1.103-.303c.644-.176%201.392.021%201.82.63q.406.578.704%201.218c.315.675.111%201.422-.364%201.891l-.814.806c-.049.048-.098.147-.088.294q.024.386%200%20.772c-.01.147.038.246.088.294l.814.806c.475.469.679%201.216.364%201.891a8%208%200%200%201-.704%201.217c-.428.61-1.176.807-1.82.63l-1.102-.302c-.067-.019-.177-.011-.3.071a6%206%200%200%201-.668.386c-.133.066-.194.158-.211.224l-.29%201.106c-.168.646-.715%201.196-1.458%201.26a8%208%200%200%201-1.402%200c-.743-.064-1.289-.614-1.458-1.26l-.289-1.106c-.018-.066-.079-.158-.212-.224a6%206%200%200%201-.668-.386c-.123-.082-.233-.09-.299-.071l-1.103.303c-.644.176-1.392-.021-1.82-.63a8%208%200%200%201-.704-1.218c-.315-.675-.111-1.422.363-1.891l.815-.806c.05-.048.098-.147.088-.294a6%206%200%200%201%200-.772c.01-.147-.038-.246-.088-.294l-.815-.806C.635%206.045.431%205.298.746%204.623a8%208%200%200%201%20.704-1.217c.428-.61%201.176-.807%201.82-.63l1.102.302c.067.019.177.011.3-.071q.321-.215.668-.386c.133-.066.194-.158.211-.224l.29-1.106C6.009.645%206.556.095%207.299.03Q7.646%200%208%200m-.571%201.525c-.036.003-.108.036-.137.146l-.289%201.105c-.147.561-.549.967-.998%201.189q-.26.13-.5.29c-.417.278-.97.423-1.529.27l-1.103-.303c-.109-.03-.175.016-.195.045q-.33.47-.573.99c-.014.031-.021.11.059.19l.815.806c.411.406.562.957.53%201.456a5%205%200%200%200%200%20.582c.032.499-.119%201.05-.53%201.456l-.815.806c-.081.08-.073.159-.059.19q.243.52.573.989c.02.03.085.076.195.046l1.102-.303c.56-.153%201.113-.008%201.53.27q.242.16.501.29c.447.222.85.629.997%201.189l.289%201.105c.029.109.101.143.137.146a6.6%206.6%200%200%200%201.142%200c.036-.003.108-.036.137-.146l.289-1.105c.147-.561.549-.967.998-1.189q.26-.13.5-.29c.417-.278.97-.423%201.529-.27l1.103.303c.109.029.175-.016.195-.045q.33-.47.573-.99c.014-.031.021-.11-.059-.19l-.815-.806c-.411-.406-.562-.957-.53-1.456a5%205%200%200%200%200-.582c-.032-.499.119-1.05.53-1.456l.815-.806c.081-.08.073-.159.059-.19a6.5%206.5%200%200%200-.573-.989c-.02-.03-.085-.076-.195-.046l-1.102.303c-.56.153-1.113.008-1.53-.27a4.4%204.4%200%200%200-.501-.29c-.447-.222-.85-.629-.997-1.189l-.289-1.105c-.029-.11-.101-.143-.137-.146a6.6%206.6%200%200%200-1.142%200M11%208a3%203%200%201%201-6%200%203%203%200%200%201%206%200M9.5%208a1.5%201.5%200%201%200-3.001.001A1.5%201.5%200%200%200%209.5%208%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M8%200a8%208%200%200%201%20.701.031C9.444.095%209.99.645%2010.16%201.29l.288%201.107c.018.066.079.158.212.224q.347.171.668.386c.123.082.233.09.299.071l1.103-.303c.644-.176%201.392.021%201.82.63q.406.578.704%201.218c.315.675.111%201.422-.364%201.891l-.814.806c-.049.048-.098.147-.088.294q.024.386%200%20.772c-.01.147.038.246.088.294l.814.806c.475.469.679%201.216.364%201.891a8%208%200%200%201-.704%201.217c-.428.61-1.176.807-1.82.63l-1.102-.302c-.067-.019-.177-.011-.3.071a6%206%200%200%201-.668.386c-.133.066-.194.158-.211.224l-.29%201.106c-.168.646-.715%201.196-1.458%201.26a8%208%200%200%201-1.402%200c-.743-.064-1.289-.614-1.458-1.26l-.289-1.106c-.018-.066-.079-.158-.212-.224a6%206%200%200%201-.668-.386c-.123-.082-.233-.09-.299-.071l-1.103.303c-.644.176-1.392-.021-1.82-.63a8%208%200%200%201-.704-1.218c-.315-.675-.111-1.422.363-1.891l.815-.806c.05-.048.098-.147.088-.294a6%206%200%200%201%200-.772c.01-.147-.038-.246-.088-.294l-.815-.806C.635%206.045.431%205.298.746%204.623a8%208%200%200%201%20.704-1.217c.428-.61%201.176-.807%201.82-.63l1.102.302c.067.019.177.011.3-.071q.321-.215.668-.386c.133-.066.194-.158.211-.224l.29-1.106C6.009.645%206.556.095%207.299.03Q7.646%200%208%200m-.571%201.525c-.036.003-.108.036-.137.146l-.289%201.105c-.147.561-.549.967-.998%201.189q-.26.13-.5.29c-.417.278-.97.423-1.529.27l-1.103-.303c-.109-.03-.175.016-.195.045q-.33.47-.573.99c-.014.031-.021.11.059.19l.815.806c.411.406.562.957.53%201.456a5%205%200%200%200%200%20.582c.032.499-.119%201.05-.53%201.456l-.815.806c-.081.08-.073.159-.059.19q.243.52.573.989c.02.03.085.076.195.046l1.102-.303c.56-.153%201.113-.008%201.53.27q.242.16.501.29c.447.222.85.629.997%201.189l.289%201.105c.029.109.101.143.137.146a6.6%206.6%200%200%200%201.142%200c.036-.003.108-.036.137-.146l.289-1.105c.147-.561.549-.967.998-1.189q.26-.13.5-.29c.417-.278.97-.423%201.529-.27l1.103.303c.109.029.175-.016.195-.045q.33-.47.573-.99c.014-.031.021-.11-.059-.19l-.815-.806c-.411-.406-.562-.957-.53-1.456a5%205%200%200%200%200-.582c-.032-.499.119-1.05.53-1.456l.815-.806c.081-.08.073-.159.059-.19a6.5%206.5%200%200%200-.573-.989c-.02-.03-.085-.076-.195-.046l-1.102.303c-.56.153-1.113.008-1.53-.27a4.4%204.4%200%200%200-.501-.29c-.447-.222-.85-.629-.997-1.189l-.289-1.105c-.029-.11-.101-.143-.137-.146a6.6%206.6%200%200%200-1.142%200M11%208a3%203%200%201%201-6%200%203%203%200%200%201%206%200M9.5%208a1.5%201.5%200%201%200-3.001.001A1.5%201.5%200%200%200%209.5%208%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/user/settings/appearance"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M11.134%201.535c.7-.509%201.416-.942%202.076-1.155.649-.21%201.463-.267%202.069.34.603.601.568%201.411.368%202.07-.202.668-.624%201.39-1.125%202.096-1.011%201.424-2.496%202.987-3.775%204.249-1.098%201.084-2.132%201.839-3.04%202.3a3.74%203.74%200%200%201-1.055%203.217c-.431.431-1.065.691-1.657.861-.614.177-1.294.287-1.914.357A21%2021%200%200%201%20.797%2016H.743l.007-.75H.749L.742%2016a.75.75%200%200%201-.743-.742l.743-.008-.742.007v-.054a21%2021%200%200%201%20.13-2.284q.101-.972.358-1.914c.17-.591.43-1.226.86-1.657a3.75%203.75%200%200%201%203.227-1.054c.466-.893%201.225-1.907%202.314-2.982%201.271-1.255%202.833-2.75%204.245-3.777M1.62%2013.089q-.077.696-.104%201.395.7-.027%201.396-.104a10.5%2010.5%200%200%200%201.668-.309c.526-.151.856-.325%201.011-.48a2.25%202.25%200%201%200-3.182-3.182c-.155.155-.329.485-.48%201.01a10.5%2010.5%200%200%200-.309%201.67m10.396-10.34c-1.224.89-2.605%202.189-3.822%203.384l1.718%201.718c1.21-1.205%202.51-2.597%203.387-3.833.47-.662.78-1.227.912-1.662.134-.444.032-.551.009-.575h-.001V1.78c-.014-.014-.113-.113-.548.027-.432.14-.995.462-1.655.942m-4.832%207.266za10%2010%200%200%200%201.63-1.142L7.155%207.216a9.7%209.7%200%200%200-1.161%201.607c.482.302.889.71%201.19%201.192%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M11.134%201.535c.7-.509%201.416-.942%202.076-1.155.649-.21%201.463-.267%202.069.34.603.601.568%201.411.368%202.07-.202.668-.624%201.39-1.125%202.096-1.011%201.424-2.496%202.987-3.775%204.249-1.098%201.084-2.132%201.839-3.04%202.3a3.74%203.74%200%200%201-1.055%203.217c-.431.431-1.065.691-1.657.861-.614.177-1.294.287-1.914.357A21%2021%200%200%201%20.797%2016H.743l.007-.75H.749L.742%2016a.75.75%200%200%201-.743-.742l.743-.008-.742.007v-.054a21%2021%200%200%201%20.13-2.284q.101-.972.358-1.914c.17-.591.43-1.226.86-1.657a3.75%203.75%200%200%201%203.227-1.054c.466-.893%201.225-1.907%202.314-2.982%201.271-1.255%202.833-2.75%204.245-3.777M1.62%2013.089q-.077.696-.104%201.395.7-.027%201.396-.104a10.5%2010.5%200%200%200%201.668-.309c.526-.151.856-.325%201.011-.48a2.25%202.25%200%201%200-3.182-3.182c-.155.155-.329.485-.48%201.01a10.5%2010.5%200%200%200-.309%201.67m10.396-10.34c-1.224.89-2.605%202.189-3.822%203.384l1.718%201.718c1.21-1.205%202.51-2.597%203.387-3.833.47-.662.78-1.227.912-1.662.134-.444.032-.551.009-.575h-.001V1.78c-.014-.014-.113-.113-.548.027-.432.14-.995.462-1.655.942m-4.832%207.266za10%2010%200%200%200%201.63-1.142L7.155%207.216a9.7%209.7%200%200%200-1.161%201.607c.482.302.889.71%201.19%201.192%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/user/settings/security"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22m8.533.133%205.25%201.68A1.75%201.75%200%200%201%2015%203.48V7c0%201.566-.32%203.182-1.303%204.682-.983%201.498-2.585%202.813-5.032%203.855a1.7%201.7%200%200%201-1.33%200c-2.447-1.042-4.049-2.357-5.032-3.855C1.32%2010.182%201%208.566%201%207V3.48a1.75%201.75%200%200%201%201.217-1.667l5.25-1.68a1.75%201.75%200%200%201%201.066%200m-.61%201.429zl-5.25%201.68a.25.25%200%200%200-.174.237V7c0%201.36.275%202.666%201.057%203.859.784%201.194%202.121%202.342%204.366%203.298a.2.2%200%200%200%20.154%200c2.245-.957%203.582-2.103%204.366-3.297C13.225%209.666%2013.5%208.358%2013.5%207V3.48a.25.25%200%200%200-.174-.238l-5.25-1.68a.25.25%200%200%200-.153%200M11.28%206.28l-3.5%203.5a.75.75%200%200%201-1.06%200l-1.5-1.5a.749.749%200%200%201%20.326-1.275.75.75%200%200%201%20.734.215l.97.97%202.97-2.97a.75.75%200%200%201%201.042.018.75.75%200%200%201%20.018%201.042%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22m8.533.133%205.25%201.68A1.75%201.75%200%200%201%2015%203.48V7c0%201.566-.32%203.182-1.303%204.682-.983%201.498-2.585%202.813-5.032%203.855a1.7%201.7%200%200%201-1.33%200c-2.447-1.042-4.049-2.357-5.032-3.855C1.32%2010.182%201%208.566%201%207V3.48a1.75%201.75%200%200%201%201.217-1.667l5.25-1.68a1.75%201.75%200%200%201%201.066%200m-.61%201.429zl-5.25%201.68a.25.25%200%200%200-.174.237V7c0%201.36.275%202.666%201.057%203.859.784%201.194%202.121%202.342%204.366%203.298a.2.2%200%200%200%20.154%200c2.245-.957%203.582-2.103%204.366-3.297C13.225%209.666%2013.5%208.358%2013.5%207V3.48a.25.25%200%200%200-.174-.238l-5.25-1.68a.25.25%200%200%200-.153%200M11.28%206.28l-3.5%203.5a.75.75%200%200%201-1.06%200l-1.5-1.5a.749.749%200%200%201%20.326-1.275.75.75%200%200%201%20.734.215l.97.97%202.97-2.97a.75.75%200%200%201%201.042.018.75.75%200%200%201%20.018%201.042%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/user/settings/keys"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M10.5%200a5.499%205.499%200%201%201-1.288%2010.848l-.932.932a.75.75%200%200%201-.53.22H7v.75a.75.75%200%200%201-.22.53l-.5.5a.75.75%200%200%201-.53.22H5v.75a.75.75%200%200%201-.22.53l-.5.5a.75.75%200%200%201-.53.22h-2A1.75%201.75%200%200%201%200%2014.25v-2c0-.199.079-.389.22-.53l4.932-4.932A5.5%205.5%200%200%201%2010.5%200m-4%205.5c-.001.431.069.86.205%201.269a.75.75%200%200%201-.181.768L1.5%2012.56v1.69c0%20.138.112.25.25.25h1.69l.06-.06v-1.19a.75.75%200%200%201%20.75-.75h1.19l.06-.06v-1.19a.75.75%200%200%201%20.75-.75h1.19l1.023-1.025a.75.75%200%200%201%20.768-.18A4%204%200%201%200%206.5%205.5M11%206a1%201%200%201%201%200-2%201%201%200%200%201%200%202%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M10.5%200a5.499%205.499%200%201%201-1.288%2010.848l-.932.932a.75.75%200%200%201-.53.22H7v.75a.75.75%200%200%201-.22.53l-.5.5a.75.75%200%200%201-.53.22H5v.75a.75.75%200%200%201-.22.53l-.5.5a.75.75%200%200%201-.53.22h-2A1.75%201.75%200%200%201%200%2014.25v-2c0-.199.079-.389.22-.53l4.932-4.932A5.5%205.5%200%200%201%2010.5%200m-4%205.5c-.001.431.069.86.205%201.269a.75.75%200%200%201-.181.768L1.5%2012.56v1.69c0%20.138.112.25.25.25h1.69l.06-.06v-1.19a.75.75%200%200%201%20.75-.75h1.19l.06-.06v-1.19a.75.75%200%200%201%20.75-.75h1.19l1.023-1.025a.75.75%200%200%201%20.768-.18A4%204%200%201%200%206.5%205.5M11%206a1%201%200%201%201%200-2%201%201%200%200%201%200%202%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href$="/settings/keys"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M10.5%200a5.499%205.499%200%201%201-1.288%2010.848l-.932.932a.75.75%200%200%201-.53.22H7v.75a.75.75%200%200%201-.22.53l-.5.5a.75.75%200%200%201-.53.22H5v.75a.75.75%200%200%201-.22.53l-.5.5a.75.75%200%200%201-.53.22h-2A1.75%201.75%200%200%201%200%2014.25v-2c0-.199.079-.389.22-.53l4.932-4.932A5.5%205.5%200%200%201%2010.5%200m-4%205.5c-.001.431.069.86.205%201.269a.75.75%200%200%201-.181.768L1.5%2012.56v1.69c0%20.138.112.25.25.25h1.69l.06-.06v-1.19a.75.75%200%200%201%20.75-.75h1.19l.06-.06v-1.19a.75.75%200%200%201%20.75-.75h1.19l1.023-1.025a.75.75%200%200%201%20.768-.18A4%204%200%201%200%206.5%205.5M11%206a1%201%200%201%201%200-2%201%201%200%200%201%200%202%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M10.5%200a5.499%205.499%200%201%201-1.288%2010.848l-.932.932a.75.75%200%200%201-.53.22H7v.75a.75.75%200%200%201-.22.53l-.5.5a.75.75%200%200%201-.53.22H5v.75a.75.75%200%200%201-.22.53l-.5.5a.75.75%200%200%201-.53.22h-2A1.75%201.75%200%200%201%200%2014.25v-2c0-.199.079-.389.22-.53l4.932-4.932A5.5%205.5%200%200%201%2010.5%200m-4%205.5c-.001.431.069.86.205%201.269a.75.75%200%200%201-.181.768L1.5%2012.56v1.69c0%20.138.112.25.25.25h1.69l.06-.06v-1.19a.75.75%200%200%201%20.75-.75h1.19l.06-.06v-1.19a.75.75%200%200%201%20.75-.75h1.19l1.023-1.025a.75.75%200%200%201%20.768-.18A4%204%200%201%200%206.5%205.5M11%206a1%201%200%201%201%200-2%201%201%200%200%201%200%202%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href="/user/settings/blocked_users"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M4.467.22a.75.75%200%200%201%20.53-.22h6.006c.199%200%20.389.079.53.22l4.247%204.247c.141.14.22.331.22.53v6.006a.75.75%200%200%201-.22.53l-4.247%204.247a.75.75%200%200%201-.53.22H4.997a.75.75%200%200%201-.53-.22L.22%2011.533a.75.75%200%200%201-.22-.53V4.997c0-.199.079-.389.22-.53Zm.84%201.28L1.5%205.308v5.384L5.308%2014.5h5.384l3.808-3.808V5.308L10.692%201.5ZM4%207.75A.75.75%200%200%201%204.75%207h6.5a.75.75%200%200%201%200%201.5h-6.5A.75.75%200%200%201%204%207.75%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M4.467.22a.75.75%200%200%201%20.53-.22h6.006c.199%200%20.389.079.53.22l4.247%204.247c.141.14.22.331.22.53v6.006a.75.75%200%200%201-.22.53l-4.247%204.247a.75.75%200%200%201-.53.22H4.997a.75.75%200%200%201-.53-.22L.22%2011.533a.75.75%200%200%201-.22-.53V4.997c0-.199.079-.389.22-.53Zm.84%201.28L1.5%205.308v5.384L5.308%2014.5h5.384l3.808-3.808V5.308L10.692%201.5ZM4%207.75A.75.75%200%200%201%204.75%207h6.5a.75.75%200%200%201%200%201.5h-6.5A.75.75%200%200%201%204%207.75%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href$="/settings/branches"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M9.5%203.25a2.25%202.25%200%201%201%203%202.122V6A2.5%202.5%200%200%201%2010%208.5H6a1%201%200%200%200-1%201v1.128a2.251%202.251%200%201%201-1.5%200V5.372a2.25%202.25%200%201%201%201.5%200v1.836A2.5%202.5%200%200%201%206%207h4a1%201%200%200%200%201-1v-.628A2.25%202.25%200%200%201%209.5%203.25m-6%200a.75.75%200%201%200%201.5%200%20.75.75%200%200%200-1.5%200m8.25-.75a.75.75%200%201%200%200%201.5.75.75%200%200%200%200-1.5M4.25%2012a.75.75%200%201%200%200%201.5.75.75%200%200%200%200-1.5%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M9.5%203.25a2.25%202.25%200%201%201%203%202.122V6A2.5%202.5%200%200%201%2010%208.5H6a1%201%200%200%200-1%201v1.128a2.251%202.251%200%201%201-1.5%200V5.372a2.25%202.25%200%201%201%201.5%200v1.836A2.5%202.5%200%200%201%206%207h4a1%201%200%200%200%201-1v-.628A2.25%202.25%200%200%201%209.5%203.25m-6%200a.75.75%200%201%200%201.5%200%20.75.75%200%200%200-1.5%200m8.25-.75a.75.75%200%201%200%200%201.5.75.75%200%200%200%200-1.5M4.25%2012a.75.75%200%201%200%200%201.5.75.75%200%200%200%200-1.5%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href$="/settings/tags"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M1%207.775V2.75C1%201.784%201.784%201%202.75%201h5.025c.464%200%20.91.184%201.238.513l6.25%206.25a1.75%201.75%200%200%201%200%202.474l-5.026%205.026a1.75%201.75%200%200%201-2.474%200l-6.25-6.25A1.75%201.75%200%200%201%201%207.775m1.5%200c0%20.066.026.13.073.177l6.25%206.25a.25.25%200%200%200%20.354%200l5.025-5.025a.25.25%200%200%200%200-.354l-6.25-6.25a.25.25%200%200%200-.177-.073H2.75a.25.25%200%200%200-.25.25ZM6%205a1%201%200%201%201%200%202%201%201%200%200%201%200-2%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M1%207.775V2.75C1%201.784%201.784%201%202.75%201h5.025c.464%200%20.91.184%201.238.513l6.25%206.25a1.75%201.75%200%200%201%200%202.474l-5.026%205.026a1.75%201.75%200%200%201-2.474%200l-6.25-6.25A1.75%201.75%200%200%201%201%207.775m1.5%200c0%20.066.026.13.073.177l6.25%206.25a.25.25%200%200%200%20.354%200l5.025-5.025a.25.25%200%200%200%200-.354l-6.25-6.25a.25.25%200%200%200-.177-.073H2.75a.25.25%200%200%200-.25.25ZM6%205a1%201%200%201%201%200%202%201%201%200%200%201%200-2%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href$="/settings/collaboration"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M2%205.5a3.5%203.5%200%201%201%205.898%202.549%205.51%205.51%200%200%201%203.034%204.084.75.75%200%201%201-1.482.235%204%204%200%200%200-7.9%200%20.75.75%200%200%201-1.482-.236A5.5%205.5%200%200%201%203.102%208.05%203.5%203.5%200%200%201%202%205.5M11%204a3.001%203.001%200%200%201%202.22%205.018%205%205%200%200%201%202.56%203.012.749.749%200%200%201-.885.954.75.75%200%200%201-.549-.514%203.51%203.51%200%200%200-2.522-2.372.75.75%200%200%201-.574-.73v-.352a.75.75%200%200%201%20.416-.672A1.5%201.5%200%200%200%2011%205.5.75.75%200%200%201%2011%204m-5.5-.5a2%202%200%201%200-.001%203.999A2%202%200%200%200%205.5%203.5%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M2%205.5a3.5%203.5%200%201%201%205.898%202.549%205.51%205.51%200%200%201%203.034%204.084.75.75%200%201%201-1.482.235%204%204%200%200%200-7.9%200%20.75.75%200%200%201-1.482-.236A5.5%205.5%200%200%201%203.102%208.05%203.5%203.5%200%200%201%202%205.5M11%204a3.001%203.001%200%200%201%202.22%205.018%205%205%200%200%201%202.56%203.012.749.749%200%200%201-.885.954.75.75%200%200%201-.549-.514%203.51%203.51%200%200%200-2.522-2.372.75.75%200%200%201-.574-.73v-.352a.75.75%200%200%201%20.416-.672A1.5%201.5%200%200%200%2011%205.5.75.75%200%200%201%2011%204m-5.5-.5a2%202%200%201%200-.001%203.999A2%202%200%200%200%205.5%203.5%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav .ui.vertical.menu a.item[href$="/settings/units"]::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M2.5%201.75v11.5c0%20.138.112.25.25.25h3.17a.75.75%200%200%201%200%201.5H2.75A1.75%201.75%200%200%201%201%2013.25V1.75C1%20.784%201.784%200%202.75%200h8.5C12.216%200%2013%20.784%2013%201.75v7.736a.75.75%200%200%201-1.5%200V1.75a.25.25%200%200%200-.25-.25h-8.5a.25.25%200%200%200-.25.25m13.274%209.537zl-4.557%204.45a.75.75%200%200%201-1.055-.008l-1.943-1.95a.75.75%200%200%201%201.062-1.058l1.419%201.425%204.026-3.932a.75.75%200%201%201%201.048%201.074M4.75%204h4.5a.75.75%200%200%201%200%201.5h-4.5a.75.75%200%200%201%200-1.5M4%207.75A.75.75%200%200%201%204.75%207h2a.75.75%200%200%201%200%201.5h-2A.75.75%200%200%201%204%207.75%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M2.5%201.75v11.5c0%20.138.112.25.25.25h3.17a.75.75%200%200%201%200%201.5H2.75A1.75%201.75%200%200%201%201%2013.25V1.75C1%20.784%201.784%200%202.75%200h8.5C12.216%200%2013%20.784%2013%201.75v7.736a.75.75%200%200%201-1.5%200V1.75a.25.25%200%200%200-.25-.25h-8.5a.25.25%200%200%200-.25.25m13.274%209.537zl-4.557%204.45a.75.75%200%200%201-1.055-.008l-1.943-1.95a.75.75%200%200%201%201.062-1.058l1.419%201.425%204.026-3.932a.75.75%200%201%201%201.048%201.074M4.75%204h4.5a.75.75%200%200%201%200%201.5h-4.5a.75.75%200%200%201%200-1.5M4%207.75A.75.75%200%200%201%204.75%207h2a.75.75%200%200%201%200%201.5h-2A.75.75%200%200%201%204%207.75%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav details.toggleable-item:has(a[href="/admin/auths"]) > summary::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22m8.533.133%205.25%201.68A1.75%201.75%200%200%201%2015%203.48V7c0%201.566-.32%203.182-1.303%204.682-.983%201.498-2.585%202.813-5.032%203.855a1.7%201.7%200%200%201-1.33%200c-2.447-1.042-4.049-2.357-5.032-3.855C1.32%2010.182%201%208.566%201%207V3.48a1.75%201.75%200%200%201%201.217-1.667l5.25-1.68a1.75%201.75%200%200%201%201.066%200m-.61%201.429zl-5.25%201.68a.25.25%200%200%200-.174.237V7c0%201.36.275%202.666%201.057%203.859.784%201.194%202.121%202.342%204.366%203.298a.2.2%200%200%200%20.154%200c2.245-.957%203.582-2.103%204.366-3.297C13.225%209.666%2013.5%208.358%2013.5%207V3.48a.25.25%200%200%200-.174-.238l-5.25-1.68a.25.25%200%200%200-.153%200M9.5%206.5c0%20.536-.286%201.032-.75%201.3v2.45a.75.75%200%200%201-1.5%200V7.8A1.5%201.5%200%201%201%209.5%206.5%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22m8.533.133%205.25%201.68A1.75%201.75%200%200%201%2015%203.48V7c0%201.566-.32%203.182-1.303%204.682-.983%201.498-2.585%202.813-5.032%203.855a1.7%201.7%200%200%201-1.33%200c-2.447-1.042-4.049-2.357-5.032-3.855C1.32%2010.182%201%208.566%201%207V3.48a1.75%201.75%200%200%201%201.217-1.667l5.25-1.68a1.75%201.75%200%200%201%201.066%200m-.61%201.429zl-5.25%201.68a.25.25%200%200%200-.174.237V7c0%201.36.275%202.666%201.057%203.859.784%201.194%202.121%202.342%204.366%203.298a.2.2%200%200%200%20.154%200c2.245-.957%203.582-2.103%204.366-3.297C13.225%209.666%2013.5%208.358%2013.5%207V3.48a.25.25%200%200%200-.174-.238l-5.25-1.68a.25.25%200%200%200-.153%200M9.5%206.5c0%20.536-.286%201.032-.75%201.3v2.45a.75.75%200%200%201-1.5%200V7.8A1.5%201.5%200%201%201%209.5%206.5%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav details.toggleable-item:has(a[href="/admin/repos"]) > summary::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M2%202.5A2.5%202.5%200%200%201%204.5%200h8.75a.75.75%200%200%201%20.75.75v12.5a.75.75%200%200%201-.75.75h-2.5a.75.75%200%200%201%200-1.5h1.75v-2h-8a1%201%200%200%200-.714%201.7.75.75%200%201%201-1.072%201.05A2.5%202.5%200%200%201%202%2011.5Zm10.5-1h-8a1%201%200%200%200-1%201v6.708A2.5%202.5%200%200%201%204.5%209h8ZM5%2012.25a.25.25%200%200%201%20.25-.25h3.5a.25.25%200%200%201%20.25.25v3.25a.25.25%200%200%201-.4.2l-1.45-1.087a.25.25%200%200%200-.3%200L5.4%2015.7a.25.25%200%200%201-.4-.2Z%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M2%202.5A2.5%202.5%200%200%201%204.5%200h8.75a.75.75%200%200%201%20.75.75v12.5a.75.75%200%200%201-.75.75h-2.5a.75.75%200%200%201%200-1.5h1.75v-2h-8a1%201%200%200%200-.714%201.7.75.75%200%201%201-1.072%201.05A2.5%202.5%200%200%201%202%2011.5Zm10.5-1h-8a1%201%200%200%200-1%201v6.708A2.5%202.5%200%200%201%204.5%209h8ZM5%2012.25a.25.25%200%200%201%20.25-.25h3.5a.25.25%200%200%201%20.25.25v3.25a.25.25%200%200%201-.4.2l-1.45-1.087a.25.25%200%200%200-.3%200L5.4%2015.7a.25.25%200%200%201-.4-.2Z%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav details.toggleable-item:has(a[href="/admin/applications"]) > summary::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M4%208H2.5a1%201%200%200%200-1%201v5.25a.75.75%200%200%201-1.5%200V9a2.5%202.5%200%200%201%202.5-2.5H4V5.133a1.75%201.75%200%200%201%201.533-1.737l2.831-.353.76-.913c.332-.4.825-.63%201.344-.63h.782c.966%200%201.75.784%201.75%201.75V4h2.25a.75.75%200%200%201%200%201.5H13v4h2.25a.75.75%200%200%201%200%201.5H13v.75a1.75%201.75%200%200%201-1.75%201.75h-.782c-.519%200-1.012-.23-1.344-.63l-.761-.912-2.83-.354A1.75%201.75%200%200%201%204%209.867Zm6.276-4.91-.95%201.14a.75.75%200%200%201-.483.265l-3.124.39a.25.25%200%200%200-.219.248v4.734c0%20.126.094.233.219.249l3.124.39a.75.75%200%200%201%20.483.264l.95%201.14a.25.25%200%200%200%20.192.09h.782a.25.25%200%200%200%20.25-.25v-8.5a.25.25%200%200%200-.25-.25h-.782a.25.25%200%200%200-.192.09%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M4%208H2.5a1%201%200%200%200-1%201v5.25a.75.75%200%200%201-1.5%200V9a2.5%202.5%200%200%201%202.5-2.5H4V5.133a1.75%201.75%200%200%201%201.533-1.737l2.831-.353.76-.913c.332-.4.825-.63%201.344-.63h.782c.966%200%201.75.784%201.75%201.75V4h2.25a.75.75%200%200%201%200%201.5H13v4h2.25a.75.75%200%200%201%200%201.5H13v.75a1.75%201.75%200%200%201-1.75%201.75h-.782c-.519%200-1.012-.23-1.344-.63l-.761-.912-2.83-.354A1.75%201.75%200%200%201%204%209.867Zm6.276-4.91-.95%201.14a.75.75%200%200%201-.483.265l-3.124.39a.25.25%200%200%200-.219.248v4.734c0%20.126.094.233.219.249l3.124.39a.75.75%200%200%201%20.483.264l.95%201.14a.25.25%200%200%200%20.192.09h.782a.25.25%200%200%200%20.25-.25v-8.5a.25.25%200%200%200-.25-.25h-.782a.25.25%200%200%200-.192.09%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav details.toggleable-item:has(a[href$="/actions/runners"]) > summary::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M8%200a8%208%200%201%201%200%2016A8%208%200%200%201%208%200M1.5%208a6.5%206.5%200%201%200%2013%200%206.5%206.5%200%200%200-13%200m4.879-2.773%204.264%202.559a.25.25%200%200%201%200%20.428l-4.264%202.559A.25.25%200%200%201%206%2010.559V5.442a.25.25%200%200%201%20.379-.215%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M8%200a8%208%200%201%201%200%2016A8%208%200%200%201%208%200M1.5%208a6.5%206.5%200%201%200%2013%200%206.5%206.5%200%200%200-13%200m4.879-2.773%204.264%202.559a.25.25%200%200%201%200%20.428l-4.264%202.559A.25.25%200%200%201%206%2010.559V5.442a.25.25%200%200%201%20.379-.215%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav details.toggleable-item:has(a[href="/admin/config"]) > summary::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M15%202.75a.75.75%200%200%201-.75.75h-4a.75.75%200%200%201%200-1.5h4a.75.75%200%200%201%20.75.75m-8.5.75v1.25a.75.75%200%200%200%201.5%200v-4a.75.75%200%200%200-1.5%200V2H1.75a.75.75%200%200%200%200%201.5zm1.25%205.25a.75.75%200%200%200%200-1.5h-6a.75.75%200%200%200%200%201.5zM15%208a.75.75%200%200%201-.75.75H11.5V10a.75.75%200%201%201-1.5%200V6a.75.75%200%200%201%201.5%200v1.25h2.75A.75.75%200%200%201%2015%208m-9%205.25v-2a.75.75%200%200%200-1.5%200v1.25H1.75a.75.75%200%200%200%200%201.5H4.5v1.25a.75.75%200%200%200%201.5%200zm9%200a.75.75%200%200%201-.75.75h-6a.75.75%200%200%201%200-1.5h6a.75.75%200%200%201%20.75.75%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M15%202.75a.75.75%200%200%201-.75.75h-4a.75.75%200%200%201%200-1.5h4a.75.75%200%200%201%20.75.75m-8.5.75v1.25a.75.75%200%200%200%201.5%200v-4a.75.75%200%200%200-1.5%200V2H1.75a.75.75%200%200%200%200%201.5zm1.25%205.25a.75.75%200%200%200%200-1.5h-6a.75.75%200%200%200%200%201.5zM15%208a.75.75%200%200%201-.75.75H11.5V10a.75.75%200%201%201-1.5%200V6a.75.75%200%200%201%201.5%200v1.25h2.75A.75.75%200%200%201%2015%208m-9%205.25v-2a.75.75%200%200%200-1.5%200v1.25H1.75a.75.75%200%200%200%200%201.5H4.5v1.25a.75.75%200%200%200%201.5%200zm9%200a.75.75%200%200%201-.75.75h-6a.75.75%200%200%201%200-1.5h6a.75.75%200%200%201%20.75.75%22%2F%3E%3C%2Fsvg%3E"); }
+.flex-container-nav details.toggleable-item:has(a[href="/admin/monitor/stats"]) > summary::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M6%202c.306%200%20.582.187.696.471L10%2010.731l1.304-3.26A.75.75%200%200%201%2012%207h3.25a.75.75%200%200%201%200%201.5h-2.742l-1.812%204.528a.751.751%200%200%201-1.392%200L6%204.77%204.696%208.03A.75.75%200%200%201%204%208.5H.75a.75.75%200%200%201%200-1.5h2.742l1.812-4.529A.75.75%200%200%201%206%202%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20width%3D%2216%22%20height%3D%2216%22%3E%3Cpath%20d%3D%22M6%202c.306%200%20.582.187.696.471L10%2010.731l1.304-3.26A.75.75%200%200%201%2012%207h3.25a.75.75%200%200%201%200%201.5h-2.742l-1.812%204.528a.751.751%200%200%201-1.392%200L6%204.77%204.696%208.03A.75.75%200%200%201%204%208.5H.75a.75.75%200%200%201%200-1.5h2.742l1.812-4.529A.75.75%200%200%201%206%202%22%2F%3E%3C%2Fsvg%3E"); }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   协作类页面 —— PR / Issue 详情页、右侧栏、Actions 列表、diff 视图
+   DOM 结构逐个 curl 确认；层叠疑点（本节标"实测"的地方）都用 getComputedStyle
+   截过计算值，不是靠猜叠 !important。
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── 缺失变量补全：--color-secondary 系列 ──
+   getComputedStyle 实测 /issues /pulls 页 markdown 正文里的 blockquote：
+   左侧引用条 border-left-width 算出来是 0px、border-left-style 是初始值
+   none（不是 index.css 通配符重置给的 solid）。一路查到 index.css 里
+   var(--color-secondary)（含 dark-1..13 / light-1..4 / alpha-10..90 /
+   hover / active，约 20 个变量）——这套变量在已加载的两份样式表
+   （index.css、本文件）里都没有定义，等号右边引用了一个从未声明的自定义
+   属性，整条 border-inline-start 声明在"计算值阶段"被判定无效，连同
+   `*{border-width:0;border-style:solid;border-color:currentcolor}` 通配符
+   重置一起失效（该重置用的是物理属性 border-width，跟逻辑属性
+   border-inline-start-width 是两个独立属性槽，互相都救不了对方）。
+   受影响的不止 blockquote：本节下面 Actions 筛选框的边框颜色实测也是
+   currentColor（同一个根因）；此外 .ui.table thead 底边框、.ui.horizontal.
+   segments 分隔线、release 列表分隔线、wiki 侧栏 TOC 嵌套虚线缩进参考线
+   都引用了这个变量。这些语义上都是"中性描边/分隔线"，不是新配色决策——
+   按 Forgejo 官方 theme-forgejo-light.css 的原始派生关系（--color-secondary
+   系列全部 alias 到 --zinc-*）接到本文件已经定好的冷中性 zinc 阶，alpha
+   后缀换算表照抄本文件里 --color-primary-alpha-* 已经用的取整方式
+   （10%→1a 20%→33 30%→4d 40%→66 50%→80 60%→99 70%→b3 80%→cc 90%→e6），
+   不引入任何新色相。 */
+:root {
+  --color-secondary: var(--zinc-200);
+  --color-secondary-dark-1: var(--zinc-200);
+  --color-secondary-dark-2: var(--zinc-300);
+  --color-secondary-dark-3: var(--zinc-300);
+  --color-secondary-dark-4: var(--zinc-400);
+  --color-secondary-dark-5: var(--zinc-400);
+  --color-secondary-dark-6: var(--zinc-500);
+  --color-secondary-dark-7: var(--zinc-500);
+  --color-secondary-dark-8: var(--zinc-600);
+  --color-secondary-dark-9: var(--zinc-600);
+  --color-secondary-dark-10: var(--zinc-700);
+  --color-secondary-dark-11: var(--zinc-700);
+  --color-secondary-dark-12: var(--zinc-800);
+  --color-secondary-dark-13: var(--zinc-800);
+  --color-secondary-light-1: var(--zinc-200);
+  --color-secondary-light-2: var(--zinc-100);
+  --color-secondary-light-3: var(--zinc-100);
+  --color-secondary-light-4: var(--zinc-50);
+  --color-secondary-alpha-10: #e3e5ea1a;
+  --color-secondary-alpha-20: #e3e5ea33;
+  --color-secondary-alpha-30: #e3e5ea4d;
+  --color-secondary-alpha-40: #e3e5ea66;
+  --color-secondary-alpha-50: #e3e5ea80;
+  --color-secondary-alpha-60: #e3e5ea99;
+  --color-secondary-alpha-70: #e3e5eab3;
+  --color-secondary-alpha-80: #e3e5eacc;
+  --color-secondary-alpha-90: #e3e5eae6;
+  --color-secondary-hover: var(--color-secondary-dark-2);
+  --color-secondary-active: var(--color-secondary-dark-4);
+
+  /* --color-white/black：同样是缺失变量，不是配色判断——index.css 用它们
+     给纯色徽标（.ui.red.label 等）的文字兜底对比色，字面意义就是黑/白。 */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* --color-ansi-*：Actions 任务日志里 ANSI 转义色类（.ansi-red-fg 等，共 16
+     个）依赖的终端色，同样从未定义过。日志背景固定用 --color-console-bg
+     (#17191f)，这里给一套在深色终端背景上可读、且沿用本文件已有语义色相
+     （红/绿/黄/蓝/青）的 16 色终端配色；magenta 本文件没有对应色相，取一个
+     不刺眼的紫调。
+     ⚠ 未过肉眼验证：日志内容由 Vue 组件在浏览器端拉取渲染，本轮用的
+     file:// 离线截图管线截不到这段内容（截图管线依赖 curl 落盘的静态
+     HTML，这里没有真实 DOM 可截），见报告"未能验证"一节。 */
+  --color-ansi-black: var(--zinc-700);
+  --color-ansi-red: #cc2b1e;
+  --color-ansi-green: #17925f;
+  --color-ansi-yellow: #b87008;
+  --color-ansi-blue: #2563eb;
+  --color-ansi-magenta: #9d5bc2;
+  --color-ansi-cyan: #118a80;
+  --color-ansi-white: var(--zinc-200);
+  --color-ansi-bright-black: var(--zinc-400);
+  --color-ansi-bright-red: #e0473a;
+  --color-ansi-bright-green: #2fbd82;
+  --color-ansi-bright-yellow: #d99a1f;
+  --color-ansi-bright-blue: #5b8def;
+  --color-ansi-bright-magenta: #bd82dd;
+  --color-ansi-bright-cyan: #22a89b;
+  --color-ansi-bright-white: var(--zinc-50);
+}
+
+/* ── PR / Issue 标题字号失控 ──
+   curl 确认真实选择器是 .repository.view.issue .issue-title h1（特异度
+   (0,3,1)），index.css 单独给到 font-size:32px;line-height:40px。本文件
+   顶部的全局 h1 规则特异度只有 (0,0,1)，压不过，标题一直是页面里最大的字。
+   这条对齐同一套 h1 令牌。同一选择器同时覆盖 Issue 详情页（class 里没有
+   "pull"，但同样命中 .repository.view.issue）。 */
+.repository.view.issue .issue-title h1 {
+  font-size: 1.35714286rem; /* 19px，同全局 h1 令牌 */
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+/* ── 右侧栏（.issue-content-right）区块间距过松 ──
+   getComputedStyle 实测：Labels 区块标题到 Milestone 区块标题纵向占用
+   65.6px（Reviewers 因多一行 WIP 提示占到 98.9px）。根因是 Fomantic
+   .ui.list 默认 margin:1em 0（14px），套在每个区块的"内容行"（No
+   reviewers/No labels/…）上——.ui.list 的 :first-child/:last-child 免除
+   规则在这里不生效，因为这些元素在 .issue-content-right 里既不是第一个
+   子元素也不是最后一个。.divider 自身 margin:10px 0，但它零高度、零边框、
+   零内边距，按 CSS 折叠规则会和相邻 margin 整体合并成一个值（取最大，不是
+   相加）：14px 的 list margin 全程压过 10px 的 divider margin，divider
+   自己的间距值形同虚设。
+   收紧策略：把"标题→内容"这一层交给 list 自己的 margin（缩到 6px，紧贴
+   标题；toggle-wip/watching 等非 list 内容本身 margin 是 0，不受影响）；
+   "区块→区块"这一层统一交给 divider 的 margin 做单一真相源（调到 16px，
+   落在分区节奏令牌 14–22 内）——不论区块内容是不是 .ui.list（Notifications/
+   Time tracker 是按钮，不是 list），区块间距都会落在同一个 16px，比原来
+   "有的地方 65px、有的地方只有 10px"更统一，也确实收紧了。 */
+.issue-content-right .ui.list { margin: 6px 0; }
+.issue-content-right .divider { margin: 16px 0; }
+
+/* ── 右侧栏区块标题降级成小字大写标签 ──
+   Reviewers/Labels/Milestone/Projects/Assignees/1 participant/
+   Notifications/Time tracker/Due date/Dependencies/Reference 目前是 14px
+   粗体，对齐左侧设置侧栏同款处理（.flex-container-nav .ui.vertical.menu
+   .header.item，见上文）。
+   选择器限定 .text > strong（直接子元素），不用裸 strong：sidebar 里还有
+   一处 <strong>WIP:</strong> 是行内强调（"Still in progress? Add WIP:
+   prefix"），父元素是 <a class="muted">，没有 .text 类；隐藏的 "Reason for
+   locking" modal 字段父元素是 <div class="field">，同样没有 .text 类。
+   两处都不会被这条选中。 */
+.issue-content-right .text > strong {
+  font-size: .82142857rem; /* 11.5px = micro 令牌 */
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--color-text-light-3);
+}
+
+/* ── Actions 列表左侧 workflow 筛选框 ──
+   不在 .flex-container-nav 作用域内：curl 确认它是 .ui.stackable.grid 里的
+   .ui.fluid.vertical.menu.actions-menu，Actions 页专属的另一套模板，跟
+   设置侧栏是两个不同容器。getComputedStyle 实测边框颜色是
+   rgb(23,25,31)（≈ --color-text，接近黑）——根因是 Fomantic 默认给
+   .ui.vertical.menu 的边框用 var(--color-secondary)，这个变量本来就没
+   定义（见本节顶部"缺失变量补全"），无效值退回 currentColor，边框颜色
+   变成文字色，看起来像一个很厚很黑的方框。上面已经把 --color-secondary
+   系列补全；这里再对齐设置侧栏同款"轻描边圆角卡 + 独立圆角项"处理，两处
+   筛选/导航菜单视觉统一。 */
+.actions-menu.ui.fluid.vertical.menu {
+  border: 1px solid var(--color-light-border);
+  border-radius: var(--border-radius-medium);
+  box-shadow: none;
+  padding: 6px;
+}
+.actions-menu.ui.vertical.menu .item {
+  font-size: .92857143rem;
+  font-weight: 500;
+  color: var(--color-text-light-1);
+  padding: 7px 10px;
+  margin: 1px 0;
+  border-radius: var(--border-radius);
+  transition: background-color .14s ease, color .14s ease;
+}
+.actions-menu.ui.vertical.menu .item:hover { background: var(--color-hover); color: var(--color-text); }
+.actions-menu.ui.vertical.menu .item.active {
+  background: var(--color-primary-alpha-10);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+/* Fomantic 在 vertical menu 相邻项之间画分隔线，这里跟设置侧栏一样不需要 */
+.actions-menu.ui.vertical.menu .item::before { display: none; }
+
+/* ── Actions 列表每行过高 ──
+   getComputedStyle 实测单行 ~72px（padding 上下各 14px + title 23.2px +
+   body 20.3px，两者之间本身零间距）。padding 是本文件"密度"一节给
+   .flex-list .flex-item 定的全局值（14px 17px），对 Issues/PR 列表同样
+   生效，不想动那条全局规则——这里只在 Actions 列表内收紧上下 padding。 */
+.run-list .flex-item { padding-top: 10px; padding-bottom: 10px; }
+
+/* ── 分支 / PR 徽标截断成 "ren…" ──
+   getComputedStyle 实测真正的约束不是源码里读到的 max-width:110px（那条
+   实测没生效，算出来是 none，大概率是窄屏断点下的值，1400px 桌面宽度用不
+   到）——真正生效的是右侧 trailing 列被写死 width:280px 且 flex-shrink:0
+   （.run-list .flex-item-trailing），跟固定 130px 的日期列、~88px 的
+   Options 按钮三者挤在一个 280px 预算里，长分支名首当其冲被压缩（实测
+   renovate/lodash-4.x 只分到 48.5px 宽）。放宽 trailing 列预算给徽标腾
+   地方；分支名顺带按设计令牌"等宽字体用于…分支名"补上 monospace（原来
+   用的是正文 Inter），字号对齐到 small 令牌 13px（原来是 Fomantic
+   .ui.label 默认的 .85714286rem=12px，不在本文件的字号阶上）。
+   选择器用 .ui.label.run-list-ref（三个类）而不是单独 .run-list-ref：
+   部署后用 getComputedStyle 复查发现 font-family 生效了但 font-size 没变，
+   查到 index.css 的 .ui.label{font-size:.85714286rem} 特异度 (0,2,0) 比
+   单类的 .run-list-ref (0,1,0) 更高，同选择器同顺序下特异度赢过后加载——
+   补上 .ui.label 前缀把特异度提到 (0,3,0) 才压得过。 */
+.run-list .flex-item-trailing { width: 420px; flex: 0 0 420px; }
+.ui.label.run-list-ref {
+  font-family: var(--fonts-monospace);
+  font-size: .92857143rem; /* 13px = small 令牌 */
+}
+
+/* ── diff 视图（PR Files changed / commit diff）字号与行高不对齐 ──
+   不在 .file-view.code-view 作用域内：curl 确认它用的是 .diff-file-body
+   table.chroma，跟原始文件查看器是两套模板，本文件已有的
+   .file-view.code-view .lines-code 规则（13px / 行高 1.7）套不到这里。
+   index.css 给 diff 表格行号/行内容单独一条
+   .lines-num,.lines-code{font-size:12px;line-height:20px}，跟"日志与代码
+   行高 1.7"令牌不一致（20/12≈1.67，字号也不在字号阶上）。这里对齐同一套
+   令牌，让原始文件视图和 diff 视图的代码显示手感一致。
+   行号数字实际走 .lines-num span:after 的 content 渲染，index.css 单独给
+   这个伪元素钉了 line-height:20px!important——必须同样用 !important 才
+   压得过，这里压的就是这一条。 */
+.diff-file-body .lines-num,
+.diff-file-body .lines-code {
+  font-size: .92857143rem; /* 13px，同 .file-view.code-view 的代码字号 */
+  line-height: 1.7;
+}
+.diff-file-body .lines-num span:after {
+  line-height: 1.7 !important; /* 压 index.css 的 .lines-num span:after{line-height:20px!important} */
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   补齐被上游引用但本主题未定义的变量
+   ---------------------------------------------------------------------
+   根因：本主题是**整体替换** Forgejo 的 theme 文件，不是叠加在它上面。
+   凡是原主题定义过、而这里没重新定义的变量，一律变成未定义 —— 而 CSS 里
+   一个无法解析的 var() 会让**整条声明作废**（不是回退到默认值）。
+   审计方法：diff 原主题与本主题的变量定义，再在 index.css 里数"无 fallback
+   的裸引用"。结论：缺 58 个，其中 24 个被裸引用会真的断，34 个无人引用。
+   下面补的就是那 24 个里除 --color-light 之外的全部。
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  /* —— 有可见缺陷的几个 —— */
+  --color-button: var(--color-box-body);          /* .ui.button 底色 */
+  --color-caret: var(--color-text);               /* 用在 * 上，全站输入光标 */
+  --color-input-toggle-background: var(--zinc-300); /* .ui.toggle.checkbox 开关底槽 */
+  --checkerboard-color-1: var(--zinc-100);        /* 图片 diff 的透明棋盘格 */
+  --checkerboard-color-2: var(--zinc-200);
+  --color-indicator-active-20: #0f7b4f33;
+  --color-indicator-idle-20: #b4530933;
+  --color-indicator-offline-20: #949aa833;
+  --color-light-mimic-enabled: var(--color-hover);
+
+  /* —— Fomantic 命名色：主要用于 .ui.<色>.button:focus / .text.<色> / .border.<色>。
+     Forgejo 的 issue 标签走内联 hex，所以真实暴露低；但留空会让这些声明整条作废。
+     取值保持色相身份，饱和度对齐本主题的克制度，不引入新的设计色板。 —— */
+  --color-purple:#5b4b9e;  --color-purple-dark-1:#4e4189; --color-purple-dark-2:#413674; --color-purple-light:#6d5eb0;
+  --color-violet:#6a4fa3;  --color-violet-dark-1:#5b448c; --color-violet-dark-2:#4c3975; --color-violet-light:#7d63b4;
+  --color-pink:#a13c68;    --color-pink-dark-1:#8b3459;   --color-pink-dark-2:#752c4a;   --color-pink-light:#b34f7a;
+  --color-brown:#7a5334;   --color-brown-dark-1:#68472c;  --color-brown-dark-2:#563b24;  --color-brown-light:#8c6242;
+  --color-olive:#5f6b2c;   --color-olive-dark-1:#525c26;  --color-olive-dark-2:#454d20;  --color-olive-light:#6e7b36;
+  --color-gold:#8a6a1f;
+  --color-grey:#6e7488;    --color-grey-light:#868c9c;
+  --color-teal-dark-1:#0d6660;  --color-teal-dark-2:#0b5652;
+  --color-yellow-dark-1:#8a5406; --color-yellow-dark-2:#734605;
+  --color-black-dark-1:#111319; --color-black-dark-2:#0b0c10; --color-black-light:#272a32;
+  --color-project-board-dark-label:#3d4150;
+
+  /* —— 刻意不定义 --color-light ——
+     它只用在 .ui.striped.table 的隔行底色上。当前未定义 = 那条声明作废 =
+     表格没有斑马纹，这正是现在的样子。补上它会让提交列表**多出**隔行底色，
+     那是改设计而不是补缺口。要加的话是一个独立决定，不该混在修复里。 */
+}
+
+/* ═══ 修：隐藏字段被当成可见输入框 ═══
+   Fomantic 的「输入框+按钮」组合 .ui.action.input 里夹着 <input type="hidden">：
+     <div class="ui action input"><input type=search><input type=hidden><button></div>
+   通用规则 `.ui.form input:not([type=checkbox]):not([type=radio])` 会把隐藏字段
+   一并选中，给它加边框和内边距 —— 它于是变成搜索框左边那个凭空多出来的空盒子。
+   全站带隐藏字段的表单都会中招（用户资料页、仓库搜索、管理后台用户列表…）。
+   排除 [type=hidden] 之外，再把 action input 的组合外观还原：
+   输入框与按钮相接的一侧不要圆角，按钮贴上去。 */
+input[type=hidden] { display: none !important; }
+
+.ui.action.input { display: flex; align-items: stretch; }
+.ui.action.input > input {
+  flex: 1 1 auto; min-width: 0;
+  border-start-end-radius: 0; border-end-end-radius: 0;
+  border-inline-end: 0;
+}
+.ui.action.input > .ui.button,
+.ui.action.input > .ui.icon.button {
+  flex: 0 0 auto;
+  border-start-start-radius: 0; border-end-start-radius: 0;
+  border: 1px solid var(--color-input-border);
+  background: var(--color-box-body);
+  color: var(--color-text-light-1);
+}
+.ui.action.input > .ui.button:hover { background: var(--color-hover); color: var(--color-text); }

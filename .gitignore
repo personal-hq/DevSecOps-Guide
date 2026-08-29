@@ -1,0 +1,6 @@
+# 临时文件与下载的上游参考文件（审计时临时取，用完即删）
+*.tmp
+/tmp/
+theme-forgejo-light.css
+base.css
+index.css

@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+  <style>
+    body { margin:0; font-family:Inter,-apple-system,"Segoe UI",system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+           font-size:14px; line-height:1.45; color:#17191f; background:#fafafb; -webkit-font-smoothing:antialiased; }
+    a { color:#3f4585; text-decoration:none; } a:hover { color:#2f3468; text-decoration:underline; }
+    .mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+  </style>
+</helmet>
+
+<div style="min-height:900px; background:#fafafb">
+
+  <!-- 顶栏 -->
+  <div style="display:flex; align-items:center; justify-content:space-between; height:52px; padding:0 16px; background:#fff; border-bottom:1px solid #e3e5ea">
+    <div style="display:flex; align-items:center; gap:16px">
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="1.75" y="1.75" width="20.5" height="20.5" rx="5.5" fill="#454b8c"/>
+        <circle cx="8.6" cy="7.6" r="1.85" fill="#fff"/><circle cx="8.6" cy="16.4" r="1.85" fill="#fff"/>
+        <circle cx="15.6" cy="12" r="1.85" fill="#fff"/>
+        <path d="M8.6 9.45v5.1M10.35 8.55l3.5 2.2M10.35 15.45l3.5-2.2" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div style="display:flex; gap:2px">
+        <span style="font-size:13px; font-weight:500; color:#5a6070; padding:6px 10px; border-radius:8px">仓库</span>
+        <span style="font-size:13px; font-weight:500; color:#5a6070; padding:6px 10px; border-radius:8px">议题</span>
+        <span style="font-size:13px; font-weight:500; color:#5a6070; padding:6px 10px; border-radius:8px">合并请求</span>
+      </div>
+    </div>
+    <div style="width:28px; height:28px; border-radius:8px; background:#454b8c; display:flex; align-items:center; justify-content:center">
+      <span style="font-size:12px; font-weight:600; color:#fff">Z</span></div>
+  </div>
+
+  <div style="padding:0 24px">
+
+    <!-- 仓库头 -->
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; padding:14px 0 10px">
+      <div style="display:flex; flex-direction:column; gap:4px">
+        <div style="display:flex; align-items:center; gap:8px">
+          <h1 class="mono" style="margin:0; font-size:19px; font-weight:600; letter-spacing:-.01em">platform/gateway</h1>
+          <span style="font-size:11.5px; font-weight:500; color:#3d4150; background:#eff0f3; padding:1px 7px; border-radius:99px">私有</span>
+        </div>
+        <div style="font-size:13px; color:#5a6070">API 网关与流量编排，承载全部对外请求</div>
+      </div>
+      <div style="display:flex; gap:7px">
+        <div style="height:30px; padding:0 11px; border:1px solid #e3e5ea; border-radius:8px; background:#fff; display:flex; align-items:center; gap:6px">
+          <span style="font-size:13px; font-weight:500; color:#17191f">关注</span>
+          <span style="font-size:11.5px; color:#7c8292">12</span></div>
+        <div style="height:30px; padding:0 11px; border:1px solid #e3e5ea; border-radius:8px; background:#fff; display:flex; align-items:center; gap:6px">
+          <span style="font-size:13px; font-weight:500; color:#17191f">派生</span>
+          <span style="font-size:11.5px; color:#7c8292">3</span></div>
+      </div>
+    </div>
+
+    <!-- tab：2px 指示器，不是 Fomantic 默认的三角 -->
+    <div style="display:flex; gap:2px; border-bottom:1px solid #edeef1">
+      <span style="font-size:13px; font-weight:600; color:#454b8c; padding:9px 12px; border-bottom:2px solid #454b8c">代码</span>
+      <span style="font-size:13px; font-weight:500; color:#5a6070; padding:9px 12px; border-bottom:2px solid transparent">议题 <span style="font-size:11.5px; color:#7c8292">7</span></span>
+      <span style="font-size:13px; font-weight:500; color:#5a6070; padding:9px 12px; border-bottom:2px solid transparent">合并请求 <span style="font-size:11.5px; color:#7c8292">2</span></span>
+      <span style="font-size:13px; font-weight:500; color:#5a6070; padding:9px 12px; border-bottom:2px solid transparent">操作</span>
+      <span style="font-size:13px; font-weight:500; color:#5a6070; padding:9px 12px; border-bottom:2px solid transparent">设置</span>
+    </div>
+
+    <!-- 分支行 -->
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0">
+      <div style="display:flex; align-items:center; gap:9px">
+        <div style="height:30px; padding:0 11px; border:1px solid #e3e5ea; border-radius:8px; background:#fff; display:flex; align-items:center; gap:7px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="7" cy="6" r="2.6" stroke="#5a6070" stroke-width="1.9"/><circle cx="7" cy="18" r="2.6" stroke="#5a6070" stroke-width="1.9"/><circle cx="17" cy="8" r="2.6" stroke="#5a6070" stroke-width="1.9"/><path d="M7 8.6v6.8M17 10.6c0 3-4 2.6-7 4.4" stroke="#5a6070" stroke-width="1.9" stroke-linecap="round"/></svg>
+          <span class="mono" style="font-size:13px; font-weight:500">main</span>
+        </div>
+        <span class="mono" style="font-size:13px; color:#5a6070">gateway / </span>
+      </div>
+      <div style="height:30px; padding:0 13px; border-radius:8px; background:#454b8c; display:flex; align-items:center">
+        <span style="font-size:13px; font-weight:500; color:#fff">克隆</span></div>
+    </div>
+
+    <!-- 最新提交条 -->
+    <div style="background:#f8f9fb; border:1px solid #e3e5ea; border-bottom:0; border-radius:12px 12px 0 0; padding:9px 12px; display:flex; align-items:center; gap:9px">
+      <div style="width:20px; height:20px; border-radius:6px; background:#eef0f7; display:flex; align-items:center; justify-content:center">
+        <span style="font-size:9.5px; font-weight:600; color:#454b8c">L</span></div>
+      <span style="font-size:13px; font-weight:500">lisi</span>
+      <span style="font-size:13px; color:#3d4150">修正上游超时未透传的问题</span>
+      <span class="mono" style="font-size:11.5px; color:#7c8292; margin-left:auto">4c4c4f8</span>
+      <span style="font-size:11.5px; color:#949aa8">12 分钟前</span>
+    </div>
+
+    <!-- 文件表 -->
+    <div style="background:#fff; border:1px solid #e3e5ea; border-radius:0 0 12px 12px; overflow:hidden">
+      <div style="display:grid; grid-template-columns:minmax(0,260px) minmax(0,1fr) 110px; gap:12px; padding:7px 12px; border-bottom:.5px solid #edeef1; align-items:center">
+        <span class="mono" style="font-size:13px; color:#3f4585">cmd/</span>
+        <span style="font-size:11.5px; color:#7c8292">拆出 CLI 入口</span>
+        <span style="font-size:11.5px; color:#949aa8; text-align:right">2 天前</span>
+      </div>
+      <div style="display:grid; grid-template-columns:minmax(0,260px) minmax(0,1fr) 110px; gap:12px; padding:7px 12px; border-bottom:.5px solid #edeef1; align-items:center">
+        <span class="mono" style="font-size:13px; color:#3f4585">internal/proxy/</span>
+        <span style="font-size:11.5px; color:#7c8292">修正上游超时未透传的问题</span>
+        <span style="font-size:11.5px; color:#949aa8; text-align:right">12 分钟前</span>
+      </div>
+      <div style="display:grid; grid-template-columns:minmax(0,260px) minmax(0,1fr) 110px; gap:12px; padding:7px 12px; border-bottom:.5px solid #edeef1; align-items:center">
+        <span class="mono" style="font-size:13px; color:#3f4585">go.mod</span>
+        <span style="font-size:11.5px; color:#7c8292">升级依赖</span>
+        <span style="font-size:11.5px; color:#949aa8; text-align:right">5 天前</span>
+      </div>
+      <div style="display:grid; grid-template-columns:minmax(0,260px) minmax(0,1fr) 110px; gap:12px; padding:7px 12px; align-items:center; background:#f0f1f4">
+        <span class="mono" style="font-size:13px; color:#3f4585">README.md</span>
+        <span style="font-size:11.5px; color:#7c8292">补充本地起服务说明</span>
+        <span style="font-size:11.5px; color:#949aa8; text-align:right">昨天</span>
+      </div>
+    </div>
+
+    <!-- 代码 / 日志块：行高 1.7 -->
+    <div style="margin-top:18px">
+      <div style="background:#f8f9fb; border:1px solid #e3e5ea; border-radius:12px 12px 0 0; padding:9px 12px; display:flex; align-items:center; justify-content:space-between">
+        <span class="mono" style="font-size:13px; font-weight:500">internal/proxy/timeout.go</span>
+        <span class="mono" style="font-size:11.5px; color:#7c8292">42 行 · 1.1 KiB</span>
+      </div>
+      <div style="background:#fff; border:1px solid #e3e5ea; border-top:0; border-radius:0 0 12px 12px; padding:12px 0; display:flex">
+        <div class="mono" style="font-size:11.5px; color:#949aa8; line-height:1.7; text-align:right; padding:0 12px; user-select:none">
+          <div>18</div><div>19</div><div>20</div><div>21</div><div>22</div>
+        </div>
+        <div class="mono" style="font-size:13px; line-height:1.7; color:#17191f; flex-grow:1; padding-right:12px">
+          <div><span style="color:#7c8292">// upstream 超时必须透传，否则计费侧看不到真实耗时</span></div>
+          <div><span style="color:#454b8c">if</span> deadline, ok := ctx.Deadline(); ok {</div>
+          <div style="background:#eef8f2">&nbsp;&nbsp;req.Header.Set(<span style="color:#0f766e">"X-Upstream-Deadline"</span>, deadline.Format(time.RFC3339Nano))</div>
+          <div style="background:#fdeeec">&nbsp;&nbsp;<span style="color:#7c8292">// req.Header.Set("X-Timeout", "30s")</span></div>
+          <div>}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+  <style>
+    body { margin:0; font-family:Inter,-apple-system,"Segoe UI",system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+           font-size:14px; line-height:1.45; color:#17191f; background:#fafafb; -webkit-font-smoothing:antialiased; }
+    a { color:#3f4585; text-decoration:none; } a:hover { color:#2f3468; text-decoration:underline; }
+    .mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+    .sw { display:flex; flex-direction:column; gap:4px; }
+    .chip { height:38px; border-radius:8px; border:1px solid rgba(23,25,31,.09); }
+    .hex { font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:#7c8292; }
+    .nm  { font-size:11.5px; color:#5a6070; }
+    .sec { font-size:11.5px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:#949aa8; }
+    .card { background:#fff; border:1px solid #e3e5ea; border-radius:12px; padding:18px;
+            display:flex; flex-direction:column; gap:14px; }
+  </style>
+</helmet>
+
+<div style="padding:24px; display:flex; flex-direction:column; gap:22px; background:#fafafb; min-height:1000px">
+
+  <div style="display:flex; flex-direction:column; gap:4px">
+    <h1 style="margin:0; font-size:19px; font-weight:600; letter-spacing:-.01em">ACME 代码仓库 · 界面规范</h1>
+    <div style="font-size:13px; color:#5a6070">浅色单主题。Forgejo 原品牌色 <span class="mono">#c2410c</span>（橙）整条替换为低饱和深靛蓝。</div>
+  </div>
+
+  <div class="card">
+    <div class="sec">强调色 · 低饱和深靛蓝</div>
+    <div style="display:grid; grid-template-columns:repeat(7, minmax(0,1fr)); gap:8px">
+      <div class="sw"><div class="chip" style="background:#d9daee"></div><div class="hex">#D9DAEE</div><div class="nm">light-7</div></div>
+      <div class="sw"><div class="chip" style="background:#bec0e0"></div><div class="hex">#BEC0E0</div><div class="nm">light-6</div></div>
+      <div class="sw"><div class="chip" style="background:#9093c4"></div><div class="hex">#9093C4</div><div class="nm">light-4</div></div>
+      <div class="sw"><div class="chip" style="background:#676ca8"></div><div class="hex">#676CA8</div><div class="nm">light-2</div></div>
+      <div class="sw"><div class="chip" style="background:#454b8c"></div><div class="hex">#454B8C</div><div class="nm">primary</div></div>
+      <div class="sw"><div class="chip" style="background:#3b4077"></div><div class="hex">#3B4077</div><div class="nm">hover</div></div>
+      <div class="sw"><div class="chip" style="background:#2a2e56"></div><div class="hex">#2A2E56</div><div class="nm">dark-4</div></div>
+    </div>
+    <div style="font-size:13px; color:#5a6070">
+      强调色只出现在：主按钮、当前 tab 指示器、链接、聚焦环、选中态。
+      不用它铺大面积背景 —— 之前 <span class="mono">#4338CA</span> 铺满整条按钮就是"太冲"的来源。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec">中性底色 · 冷中性（替换 Forgejo 偏暖的 zinc 阶，47 个变量随之派生）</div>
+    <div style="display:grid; grid-template-columns:repeat(7, minmax(0,1fr)); gap:8px">
+      <div class="sw"><div class="chip" style="background:#fafafb"></div><div class="hex">#FAFAFB</div><div class="nm">页面底</div></div>
+      <div class="sw"><div class="chip" style="background:#ffffff"></div><div class="hex">#FFFFFF</div><div class="nm">卡片</div></div>
+      <div class="sw"><div class="chip" style="background:#f5f6f8"></div><div class="hex">#F5F6F8</div><div class="nm">填充/日志</div></div>
+      <div class="sw"><div class="chip" style="background:#e3e5ea"></div><div class="hex">#E3E5EA</div><div class="nm">描边 1px</div></div>
+      <div class="sw"><div class="chip" style="background:#edeef1"></div><div class="hex">#EDEEF1</div><div class="nm">发丝 .5px</div></div>
+      <div class="sw"><div class="chip" style="background:#5a6070"></div><div class="hex">#5A6070</div><div class="nm">次要字</div></div>
+      <div class="sw"><div class="chip" style="background:#17191f"></div><div class="hex">#17191F</div><div class="nm">正文字</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec">语义色 · 只在 CI 状态与 diff 出现</div>
+    <div style="display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:8px">
+      <div class="sw"><div class="chip" style="background:#0f7b4f"></div><div class="hex">#0F7B4F</div><div class="nm">通过 / 已合并</div></div>
+      <div class="sw"><div class="chip" style="background:#b42318"></div><div class="hex">#B42318</div><div class="nm">失败</div></div>
+      <div class="sw"><div class="chip" style="background:#b45309"></div><div class="hex">#B45309</div><div class="nm">警告</div></div>
+      <div class="sw"><div class="chip" style="background:#1d4ed8"></div><div class="hex">#1D4ED8</div><div class="nm">信息</div></div>
+      <div class="sw"><div class="chip" style="background:#eef8f2"></div><div class="hex">#EEF8F2</div><div class="nm">diff 增行</div></div>
+      <div class="sw"><div class="chip" style="background:#fdeeec"></div><div class="hex">#FDEEEC</div><div class="nm">diff 删行</div></div>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:22px; align-items:start">
+
+    <div class="card">
+      <div class="sec">字号阶 · 固定 rem，锚在 14px</div>
+      <div style="display:flex; flex-direction:column; gap:10px">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; border-bottom:.5px solid #edeef1; padding-bottom:8px">
+          <span style="font-size:19px; font-weight:600; letter-spacing:-.01em">页面标题</span><span class="hex">19 / 600 / 1.3</span></div>
+        <div style="display:flex; align-items:baseline; justify-content:space-between; border-bottom:.5px solid #edeef1; padding-bottom:8px">
+          <span style="font-size:15px; font-weight:600">区块标题</span><span class="hex">15 / 600 / 1.35</span></div>
+        <div style="display:flex; align-items:baseline; justify-content:space-between; border-bottom:.5px solid #edeef1; padding-bottom:8px">
+          <span style="font-size:14px">正文，密度是特性</span><span class="hex">14 / 400 / 1.45</span></div>
+        <div style="display:flex; align-items:baseline; justify-content:space-between; border-bottom:.5px solid #edeef1; padding-bottom:8px">
+          <span style="font-size:13px; color:#5a6070">辅助说明与元信息</span><span class="hex">13 / 400</span></div>
+        <div style="display:flex; align-items:baseline; justify-content:space-between">
+          <span style="font-size:11.5px; color:#7c8292">时间戳 · 计数 · 标签</span><span class="hex">11.5 / 400</span></div>
+      </div>
+      <div style="border-top:.5px solid #edeef1; padding-top:12px; display:flex; flex-direction:column; gap:6px">
+        <div class="nm">等宽用于：文件路径 · commit hash · 分支名 · 日志（行高 1.7）</div>
+        <div class="mono" style="font-size:13px; line-height:1.7; background:#f5f6f8; border-radius:8px; padding:9px 11px">
+          internal/proxy/timeout.go<br>4c4c4f8 · main
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec">组件</div>
+
+      <div style="display:flex; flex-direction:column; gap:7px">
+        <div class="nm">按钮 · 高 34–36 / 圆角 8 / 字重 500</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap">
+          <div style="height:34px; padding:0 13px; border-radius:8px; background:#454b8c; display:flex; align-items:center">
+            <span style="font-size:13px; font-weight:500; color:#fff">主操作</span></div>
+          <div style="height:34px; padding:0 13px; border-radius:8px; background:#fff; border:1px solid #e3e5ea; display:flex; align-items:center">
+            <span style="font-size:13px; font-weight:500; color:#17191f">次操作</span></div>
+          <div style="height:34px; padding:0 13px; border-radius:8px; background:#fff; border:1px solid #f3cac5; display:flex; align-items:center">
+            <span style="font-size:13px; font-weight:500; color:#b42318">危险操作</span></div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:7px">
+        <div class="nm">输入 · 聚焦是 1px 描边 + 3px 低透明度光环</div>
+        <div style="height:36px; border:1px solid #9aa0c4; border-radius:8px; box-shadow:0 0 0 3px rgba(69,75,140,.10); display:flex; align-items:center; padding:0 11px">
+          <span style="font-size:14px; color:#17191f">聚焦态</span></div>
+        <div style="height:36px; border:1px solid #e3e5ea; border-radius:8px; display:flex; align-items:center; padding:0 11px">
+          <span style="font-size:14px; color:#a8adb9">默认态占位</span></div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:7px">
+        <div class="nm">标签与状态</div>
+        <div style="display:flex; gap:7px; flex-wrap:wrap; align-items:center">
+          <span style="font-size:11.5px; font-weight:500; color:#3d4150; background:#eff0f3; padding:2px 8px; border-radius:99px">私有</span>
+          <span style="font-size:11.5px; font-weight:500; color:#0f7b4f; background:#eef8f2; padding:2px 8px; border-radius:99px">CI 通过</span>
+          <span style="font-size:11.5px; font-weight:500; color:#b42318; background:#fdeeec; padding:2px 8px; border-radius:99px">CI 失败</span>
+          <span style="font-size:11.5px; font-weight:500; color:#8a4a06; background:#fdf5e8; padding:2px 8px; border-radius:99px">待评审</span>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:7px">
+        <div class="nm">Tab · 2px 指示器，取代 Fomantic 默认三角</div>
+        <div style="display:flex; gap:2px; border-bottom:1px solid #edeef1">
+          <span style="font-size:13px; font-weight:600; color:#454b8c; padding:9px 12px; border-bottom:2px solid #454b8c">代码</span>
+          <span style="font-size:13px; font-weight:500; color:#5a6070; padding:9px 12px">议题</span>
+          <span style="font-size:13px; font-weight:500; color:#5a6070; padding:9px 12px">设置</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <div class="sec">已移除</div>
+    <div style="font-size:13px; color:#3d4150; line-height:1.6">
+      页脚的「由 Forgejo 提供支持」「当前版本 16.0.3」「页面 1ms 模板 0ms」——
+      对内部用户是噪音，版本号还是无谓的信息暴露。橙色 Forgejo 标识换成 ACME 占位标记。
+      主题列表锁成单一浅色主题，不留切到深色的入口。
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+  <style>
+    body { margin:0; font-family:Inter,-apple-system,"Segoe UI",system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+           font-size:14px; line-height:1.45; color:#17191f; background:#fafafb; -webkit-font-smoothing:antialiased; }
+    a { color:#3f4585; text-decoration:none; } a:hover { color:#2f3468; text-decoration:underline; }
+    .mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+    .navitem { font-size:13px; font-weight:500; color:#5a6070; padding:7px 10px; border-radius:8px;
+               display:flex; align-items:center; gap:9px; }
+    .navitem svg { opacity:.7; }
+    .navitem.on svg { opacity:1; }
+    .navitem.on { background:rgba(69,75,140,.10); color:#454b8c; font-weight:600; }
+    .grouplabel { font-size:11.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase;
+                  color:#949aa8; padding:8px 10px 6px; }
+    .row { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; }
+    .row + .row { border-top:.5px solid #edeef1; }
+    .btn2 { font-size:13px; font-weight:500; color:#17191f; background:#fff;
+            border:1px solid #e3e5ea; border-radius:8px; padding:6px 12px; }
+  </style>
+</helmet>
+
+<div style="min-height:880px; background:#fafafb">
+
+  <div style="display:flex; align-items:center; justify-content:space-between; height:52px; padding:0 16px; background:#fff; border-bottom:1px solid #e3e5ea">
+    <div style="display:flex; align-items:center; gap:16px">
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="1.5" y="1.5" width="21" height="21" rx="6" fill="#454b8c"/>
+        <path d="M9.6 8.4 6.2 12l3.4 3.6M14.4 8.4 17.8 12l-3.4 3.6" fill="none" stroke="#fff"
+              stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div style="display:flex; gap:2px">
+        <span class="navitem">仓库</span><span class="navitem">议题</span><span class="navitem">合并请求</span>
+      </div>
+    </div>
+    <div style="width:28px; height:28px; border-radius:8px; background:#454b8c; display:flex; align-items:center; justify-content:center">
+      <span style="font-size:12px; font-weight:600; color:#fff">Z</span></div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:236px minmax(0,1fr); gap:22px; padding:22px 24px; align-items:start">
+
+    <!-- 侧栏：轻描边圆角卡，分组标题降级成小字标签，当前项走靛蓝而非灰块 -->
+    <div style="background:#fff; border:1px solid #edeef1; border-radius:12px; padding:6px">
+      <div class="grouplabel">管理设置</div>
+      <div style="display:flex; flex-direction:column; gap:1px">
+        <span class="navitem on"><svg style="flex:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 1 0 6.016 4.035.75.75 0 0 1 1.388-.57 8 8 0 1 1-4.37-4.37.75.75 0 1 1-.569 1.389A6.5 6.5 0 0 0 8 1.5m6.28.22a.75.75 0 0 1 0 1.06l-4.063 4.064a2.5 2.5 0 1 1-1.06-1.06L13.22 1.72a.75.75 0 0 1 1.06 0M7 8a1 1 0 1 0 2 0 1 1 0 0 0-2 0"/></svg><span>管理面板</span></span>
+        <span class="navitem"><svg style="flex:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="m8.533.133 5.25 1.68A1.75 1.75 0 0 1 15 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.7 1.7 0 0 1-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 0 1 1.217-1.667l5.25-1.68a1.75 1.75 0 0 1 1.066 0m-.61 1.429zl-5.25 1.68a.25.25 0 0 0-.174.237V7c0 1.36.275 2.666 1.057 3.859.784 1.194 2.121 2.342 4.366 3.298a.2.2 0 0 0 .154 0c2.245-.957 3.582-2.103 4.366-3.297C13.225 9.666 13.5 8.358 13.5 7V3.48a.25.25 0 0 0-.174-.238l-5.25-1.68a.25.25 0 0 0-.153 0M9.5 6.5c0 .536-.286 1.032-.75 1.3v2.45a.75.75 0 0 1-1.5 0V7.8A1.5 1.5 0 1 1 9.5 6.5"/></svg><span>身份及认证</span></span>
+        <span class="navitem"><svg style="flex:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.5 2.5 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.5 2.5 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.25.25 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/></svg><span>代码资源</span></span>
+        <span class="navitem"><svg style="flex:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M4 8H2.5a1 1 0 0 0-1 1v5.25a.75.75 0 0 1-1.5 0V9a2.5 2.5 0 0 1 2.5-2.5H4V5.133a1.75 1.75 0 0 1 1.533-1.737l2.831-.353.76-.913c.332-.4.825-.63 1.344-.63h.782c.966 0 1.75.784 1.75 1.75V4h2.25a.75.75 0 0 1 0 1.5H13v4h2.25a.75.75 0 0 1 0 1.5H13v.75a1.75 1.75 0 0 1-1.75 1.75h-.782c-.519 0-1.012-.23-1.344-.63l-.761-.912-2.83-.354A1.75 1.75 0 0 1 4 9.867Zm6.276-4.91-.95 1.14a.75.75 0 0 1-.483.265l-3.124.39a.25.25 0 0 0-.219.248v4.734c0 .126.094.233.219.249l3.124.39a.75.75 0 0 1 .483.264l.95 1.14a.25.25 0 0 0 .192.09h.782a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25h-.782a.25.25 0 0 0-.192.09"/></svg><span>集成</span></span>
+        <span class="navitem"><svg style="flex:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0m4.879-2.773 4.264 2.559a.25.25 0 0 1 0 .428l-4.264 2.559A.25.25 0 0 1 6 10.559V5.442a.25.25 0 0 1 .379-.215"/></svg><span>Actions</span></span>
+        <span class="navitem"><svg style="flex:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M15 2.75a.75.75 0 0 1-.75.75h-4a.75.75 0 0 1 0-1.5h4a.75.75 0 0 1 .75.75m-8.5.75v1.25a.75.75 0 0 0 1.5 0v-4a.75.75 0 0 0-1.5 0V2H1.75a.75.75 0 0 0 0 1.5zm1.25 5.25a.75.75 0 0 0 0-1.5h-6a.75.75 0 0 0 0 1.5zM15 8a.75.75 0 0 1-.75.75H11.5V10a.75.75 0 1 1-1.5 0V6a.75.75 0 0 1 1.5 0v1.25h2.75A.75.75 0 0 1 15 8m-9 5.25v-2a.75.75 0 0 0-1.5 0v1.25H1.75a.75.75 0 0 0 0 1.5H4.5v1.25a.75.75 0 0 0 1.5 0zm9 0a.75.75 0 0 1-.75.75h-6a.75.75 0 0 1 0-1.5h6a.75.75 0 0 1 .75.75"/></svg><span>应用配置</span></span>
+        <span class="navitem"><svg style="flex:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 16a2 2 0 0 0 1.985-1.75c.017-.137-.097-.25-.235-.25h-3.5c-.138 0-.252.113-.235.25A2 2 0 0 0 8 16M3 5a5 5 0 0 1 10 0v2.947q0 .076.042.139l1.703 2.555A1.519 1.519 0 0 1 13.482 13H2.518a1.516 1.516 0 0 1-1.263-2.36l1.703-2.554A.26.26 0 0 0 3 7.947Zm5-3.5A3.5 3.5 0 0 0 4.5 5v2.947c0 .346-.102.683-.294.97l-1.703 2.556-.003.01.001.006q0 .003.004.006l.006.004.007.001h10.964l.007-.001.006-.004.004-.006.001-.007-.003-.01-1.703-2.554a1.75 1.75 0 0 1-.294-.97V5A3.5 3.5 0 0 0 8 1.5"/></svg><span>系统通知</span></span>
+        <span class="navitem"><svg style="flex:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M6 2c.306 0 .582.187.696.471L10 10.731l1.304-3.26A.75.75 0 0 1 12 7h3.25a.75.75 0 0 1 0 1.5h-2.742l-1.812 4.528a.751.751 0 0 1-1.392 0L6 4.77 4.696 8.03A.75.75 0 0 1 4 8.5H.75a.75.75 0 0 1 0-1.5h2.742l1.812-4.529A.75.75 0 0 1 6 2"/></svg><span>监控面板</span></span>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:22px">
+
+      <div style="display:flex; flex-direction:column; gap:10px">
+        <h2 style="margin:0; font-size:15px; font-weight:600">维护操作</h2>
+        <!-- 12 个动作全用主色按钮会把整页压垮；降级成次要按钮，
+             主色只留给页面真正的主行动点 -->
+        <div style="background:#fff; border:1px solid #e3e5ea; border-radius:12px; padding:4px 0">
+          <div class="row"><span style="font-size:14px">删除所有未激活的帐户</span><span class="btn2">执行</span></div>
+          <div class="row"><span style="font-size:14px">对所有仓库进行垃圾回收</span><span class="btn2">执行</span></div>
+          <div class="row"><span style="font-size:14px">重新同步所有仓库的 Git 钩子</span><span class="btn2">执行</span></div>
+          <div class="row"><span style="font-size:14px">对所有仓库健康检查</span><span class="btn2">执行</span></div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:10px">
+        <h2 style="margin:0; font-size:15px; font-weight:600">系统状态</h2>
+        <div style="background:#fff; border:1px solid #e3e5ea; border-radius:12px; padding:16px;
+                    display:grid; grid-template-columns:200px minmax(0,1fr); gap:8px 16px">
+          <span style="font-size:13px; font-weight:500; color:#5a6070">服务运行时间</span>
+          <span class="mono" style="font-size:13px">2 分 40 秒</span>
+          <span style="font-size:13px; font-weight:500; color:#5a6070">当前 goroutines</span>
+          <span class="mono" style="font-size:13px">61</span>
+          <span style="font-size:13px; font-weight:500; color:#5a6070">当前内存使用量</span>
+          <span class="mono" style="font-size:13px">183 MiB</span>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:10px">
+        <h2 style="margin:0; font-size:15px; font-weight:600">CI Runner</h2>
+        <div style="background:#fff; border:1px solid #e3e5ea; border-radius:12px; padding:4px 0">
+          <div class="row">
+            <div style="display:flex; align-items:center; gap:10px">
+              <span style="width:7px; height:7px; border-radius:99px; background:#0f7b4f"></span>
+              <span class="mono" style="font-size:14px">acme-runner-1</span>
+              <span style="font-size:11.5px; font-weight:500; color:#3d4150; background:#eff0f3; padding:1px 7px; border-radius:99px">debian-latest</span>
+              <span style="font-size:11.5px; font-weight:500; color:#3d4150; background:#eff0f3; padding:1px 7px; border-radius:99px">docker</span>
+            </div>
+            <span style="font-size:11.5px; color:#7c8292">空闲 · v13.0.0</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

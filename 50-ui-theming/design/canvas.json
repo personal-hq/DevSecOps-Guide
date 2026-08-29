@@ -1,0 +1,63 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1200,
+      "h": 760,
+      "title": "登录页"
+    },
+    {
+      "file": "Repos.dc.html",
+      "x": 1300,
+      "y": 0,
+      "w": 1280,
+      "h": 900,
+      "title": "仓库列表"
+    },
+    {
+      "file": "Code.dc.html",
+      "x": 0,
+      "y": 1030,
+      "w": 1280,
+      "h": 900,
+      "title": "代码视图"
+    },
+    {
+      "file": "System.dc.html",
+      "x": 1380,
+      "y": 1030,
+      "w": 1120,
+      "h": 1060,
+      "title": "界面规范"
+    },
+    {
+      "file": "Settings.dc.html",
+      "x": 0,
+      "y": 2200,
+      "w": 1280,
+      "h": 880,
+      "title": "设置界面"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "brief",
+      "x": 0,
+      "y": -150,
+      "w": 560,
+      "text": "ACME 内部代码仓库 · Forgejo v16.0.3 重设计\n只做浅色 · Inter + ui-monospace · 固定 rem 阶 · 圆角 8/12 · 密度是特性\n配色从 #4338CA 降到 #454B8C —— 原来铺满按钮太冲。"
+    },
+    {
+      "id": "settings-note",
+      "x": 1380,
+      "y": 2200,
+      "w": 420,
+      "text": "设置界面打磨要点：\n· 侧栏从厚重方框改成轻描边圆角卡；分组标题降级成小字标签\n· 当前项用靛蓝底色，不用灰块\n· 12 个维护按钮从主色降级成次要按钮 —— 主色只给真正的主行动点\n· 行高收紧、发丝分隔线\n注意：维护按钮的类是 \"primary button\"，没有 .ui 前缀\n· 图标复用 Forgejo 自带的 Octicons（MIT，和 GitHub 同一套），不自绘；\n  内联成 data URI 并用 mask 上色，图标跟随当前项变靛蓝"
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}

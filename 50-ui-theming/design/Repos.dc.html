@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+  <style>
+    body { margin:0; font-family:Inter,-apple-system,"Segoe UI",system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+           font-size:14px; line-height:1.45; color:#17191f; background:#fafafb; -webkit-font-smoothing:antialiased; }
+    a { color:#3f4585; text-decoration:none; } a:hover { color:#2f3468; text-decoration:underline; }
+    .mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+  </style>
+</helmet>
+
+<div style="min-height:900px; background:#fafafb; display:flex; flex-direction:column">
+
+  <!-- 顶栏 -->
+  <div style="display:flex; align-items:center; justify-content:space-between; height:52px; padding:0 16px; background:#fff; border-bottom:1px solid #e3e5ea">
+    <div style="display:flex; align-items:center; gap:16px">
+      <div style="display:flex; align-items:center; gap:9px">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="1.75" y="1.75" width="20.5" height="20.5" rx="5.5" fill="#454b8c"/>
+          <circle cx="8.6" cy="7.6" r="1.85" fill="#fff"/><circle cx="8.6" cy="16.4" r="1.85" fill="#fff"/>
+          <circle cx="15.6" cy="12" r="1.85" fill="#fff"/>
+          <path d="M8.6 9.45v5.1M10.35 8.55l3.5 2.2M10.35 15.45l3.5-2.2" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span style="font-size:14px; font-weight:600; letter-spacing:-.01em">ACME</span>
+      </div>
+      <div style="display:flex; gap:2px">
+        <span style="font-size:13px; font-weight:500; color:#454b8c; background:#eef0f7; padding:6px 10px; border-radius:8px">仓库</span>
+        <span style="font-size:13px; font-weight:500; color:#5a6070; padding:6px 10px; border-radius:8px">议题</span>
+        <span style="font-size:13px; font-weight:500; color:#5a6070; padding:6px 10px; border-radius:8px">合并请求</span>
+        <span style="font-size:13px; font-weight:500; color:#5a6070; padding:6px 10px; border-radius:8px">操作</span>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px">
+      <div style="width:200px; height:30px; border:1px solid #e3e5ea; border-radius:8px; display:flex; align-items:center; gap:7px; padding:0 10px; background:#fff">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="#9ca1b0" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="#9ca1b0" stroke-width="2" stroke-linecap="round"/></svg>
+        <span style="font-size:13px; color:#a8adb9">搜索仓库</span>
+      </div>
+      <div style="width:28px; height:28px; border-radius:8px; background:#454b8c; display:flex; align-items:center; justify-content:center">
+        <span style="font-size:12px; font-weight:600; color:#fff">Z</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:22px; padding:22px 24px; align-items:start">
+
+    <!-- 仓库列表 -->
+    <div style="display:flex; flex-direction:column; gap:14px">
+      <div style="display:flex; align-items:center; justify-content:space-between">
+        <h1 style="margin:0; font-size:19px; font-weight:600; letter-spacing:-.01em">仓库</h1>
+        <div style="display:flex; align-items:center; gap:8px">
+          <span style="font-size:13px; color:#5a6070">按最近更新</span>
+          <div style="height:32px; padding:0 13px; border-radius:8px; background:#454b8c; display:flex; align-items:center">
+            <span style="font-size:13px; font-weight:500; color:#fff">新建仓库</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#fff; border:1px solid #e3e5ea; border-radius:12px; overflow:hidden">
+
+        <div style="display:flex; align-items:flex-start; gap:12px; padding:14px 17px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-top:2px" aria-hidden="true"><path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v20H7.5A2.5 2.5 0 0 1 5 19.5v-15Z" stroke="#7c8292" stroke-width="1.7"/><path d="M5 17h14" stroke="#7c8292" stroke-width="1.7"/></svg>
+          <div style="flex-grow:1; display:flex; flex-direction:column; gap:3px">
+            <div style="display:flex; align-items:center; gap:8px">
+              <a class="mono" href="#" style="font-size:14px; font-weight:500">platform/gateway</a>
+              <span style="font-size:11.5px; font-weight:500; color:#3d4150; background:#eff0f3; padding:1px 7px; border-radius:99px">私有</span>
+            </div>
+            <div style="font-size:13px; color:#5a6070">API 网关与流量编排，承载全部对外请求</div>
+            <div style="display:flex; align-items:center; gap:14px; margin-top:2px">
+              <span style="display:flex; align-items:center; gap:5px; font-size:11.5px; color:#7c8292">
+                <span style="width:8px; height:8px; border-radius:99px; background:#454b8c"></span>Go</span>
+              <span style="font-size:11.5px; color:#7c8292">3 分钟前更新</span>
+              <span style="display:flex; align-items:center; gap:4px; font-size:11.5px; color:#0f7b4f">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="#0f7b4f" stroke-width="2.4"/><path d="m8 12 2.6 2.6L16 9.4" stroke="#0f7b4f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                CI 通过</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="border-top:.5px solid #edeef1; display:flex; align-items:flex-start; gap:12px; padding:14px 17px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-top:2px" aria-hidden="true"><path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v20H7.5A2.5 2.5 0 0 1 5 19.5v-15Z" stroke="#7c8292" stroke-width="1.7"/><path d="M5 17h14" stroke="#7c8292" stroke-width="1.7"/></svg>
+          <div style="flex-grow:1; display:flex; flex-direction:column; gap:3px">
+            <div style="display:flex; align-items:center; gap:8px">
+              <a class="mono" href="#" style="font-size:14px; font-weight:500">platform/billing</a>
+              <span style="font-size:11.5px; font-weight:500; color:#3d4150; background:#eff0f3; padding:1px 7px; border-radius:99px">私有</span>
+            </div>
+            <div style="font-size:13px; color:#5a6070">计量与结算，钱路相关改动需双人评审</div>
+            <div style="display:flex; align-items:center; gap:14px; margin-top:2px">
+              <span style="display:flex; align-items:center; gap:5px; font-size:11.5px; color:#7c8292">
+                <span style="width:8px; height:8px; border-radius:99px; background:#454b8c"></span>Go</span>
+              <span style="font-size:11.5px; color:#7c8292">1 小时前更新</span>
+              <span style="display:flex; align-items:center; gap:4px; font-size:11.5px; color:#b42318">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="#b42318" stroke-width="2.4"/><path d="M12 7.5v5.5M12 16.2v.1" stroke="#b42318" stroke-width="2.4" stroke-linecap="round"/></svg>
+                CI 失败</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="border-top:.5px solid #edeef1; display:flex; align-items:flex-start; gap:12px; padding:14px 17px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-top:2px" aria-hidden="true"><path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v20H7.5A2.5 2.5 0 0 1 5 19.5v-15Z" stroke="#7c8292" stroke-width="1.7"/><path d="M5 17h14" stroke="#7c8292" stroke-width="1.7"/></svg>
+          <div style="flex-grow:1; display:flex; flex-direction:column; gap:3px">
+            <div style="display:flex; align-items:center; gap:8px">
+              <a class="mono" href="#" style="font-size:14px; font-weight:500">web/console</a>
+              <span style="font-size:11.5px; font-weight:500; color:#3d4150; background:#eff0f3; padding:1px 7px; border-radius:99px">私有</span>
+            </div>
+            <div style="font-size:13px; color:#5a6070">内部控制台前端</div>
+            <div style="display:flex; align-items:center; gap:14px; margin-top:2px">
+              <span style="display:flex; align-items:center; gap:5px; font-size:11.5px; color:#7c8292">
+                <span style="width:8px; height:8px; border-radius:99px; background:#0f766e"></span>TypeScript</span>
+              <span style="font-size:11.5px; color:#7c8292">昨天更新</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 右栏：活动 -->
+    <div style="display:flex; flex-direction:column; gap:14px">
+      <div style="background:#fff; border:1px solid #e3e5ea; border-radius:12px; padding:17px; display:flex; flex-direction:column; gap:12px">
+        <h2 style="margin:0; font-size:15px; font-weight:600">最近活动</h2>
+        <div style="display:flex; flex-direction:column; gap:11px">
+          <div style="display:flex; gap:9px">
+            <div style="width:22px; height:22px; border-radius:7px; background:#eef0f7; display:flex; align-items:center; justify-content:center; flex-shrink:0">
+              <span style="font-size:10px; font-weight:600; color:#454b8c">L</span></div>
+            <div style="font-size:13px; color:#3d4150; line-height:1.45">
+              <span style="font-weight:500">lisi</span> 推送 2 个提交到
+              <span class="mono" style="font-size:12px">gateway/main</span>
+              <div style="font-size:11.5px; color:#949aa8; margin-top:2px">12 分钟前</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:9px">
+            <div style="width:22px; height:22px; border-radius:7px; background:#eef0f7; display:flex; align-items:center; justify-content:center; flex-shrink:0">
+              <span style="font-size:10px; font-weight:600; color:#454b8c">W</span></div>
+            <div style="font-size:13px; color:#3d4150; line-height:1.45">
+              <span style="font-weight:500">wangwu</span> 打开了合并请求
+              <span class="mono" style="font-size:12px">billing#204</span>
+              <div style="font-size:11.5px; color:#949aa8; margin-top:2px">1 小时前</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#fff; border:1px solid #e3e5ea; border-radius:12px; padding:17px; display:flex; flex-direction:column; gap:10px">
+        <h2 style="margin:0; font-size:15px; font-weight:600">克隆</h2>
+        <div style="display:flex; flex-direction:column; gap:6px">
+          <span style="font-size:11.5px; color:#7c8292">SSH（内网隧道）</span>
+          <div class="mono" style="font-size:11.5px; color:#17191f; background:#f5f6f8; border:1px solid #edeef1; border-radius:8px; padding:8px 10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">ssh://git@localhost:21022/…</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:auto; border-top:.5px solid #edeef1; padding:14px 24px">
+    <span style="font-size:11.5px; color:#949aa8">ACME 内部代码仓库 · 问题联系 <span class="mono">#it-support</span></span>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
