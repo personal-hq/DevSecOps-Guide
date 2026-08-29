@@ -9,6 +9,7 @@ gitleaks / trivy / semgrep / ZAP 四个扫描工具的分工、许可证和配�
 | [zap-dast.md](zap-dast.md) | ZAP 的三个打包脚本、触发矩阵、Automation Framework |
 | [tool-selection.md](tool-selection.md) | 商业/进阶工具怎么选、什么时候值得买 |
 | [sast-engine-comparison.md](sast-engine-comparison.md) | SAST 引擎选型实测：CodeQL 许可证、Semgrep vs Opengrep |
+| [false-positives.md](false-positives.md) | **误报怎么处置**：真实代码 83% 误报率、三种成因三种治法、一次失败的自定义规则 |
 
 ## 四工具分工
 

@@ -20,6 +20,7 @@
 | [30-security-scanning](30-security-scanning/) | gitleaks / trivy / semgrep / ZAP 分工与许可证 |
 | ├ [zap-dast](30-security-scanning/zap-dast.md) | ZAP：三个脚本、触发矩阵、Automation Framework |
 | ├ [sast-engine-comparison](30-security-scanning/sast-engine-comparison.md) | SAST 引擎选型实测：CodeQL 许可证、Semgrep vs Opengrep |
+| ├ [false-positives](30-security-scanning/false-positives.md) | **误报怎么处置**：实测 83% 误报率、成因分类、处置成本原则 |
 | └ [tool-selection](30-security-scanning/tool-selection.md) | 商业/进阶工具选型 |
 | [40-dependency-updates](40-dependency-updates/) | Renovate：权限模型与踩坑 |
 | [templates](templates/) | 仓库模板：service / docs 两种，以及为什么只能复制不能用可复用 workflow |
